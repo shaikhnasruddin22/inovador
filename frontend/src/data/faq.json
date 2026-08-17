@@ -1,0 +1,37 @@
+[
+  {
+    "id": "faq-01",
+    "question": "What architectural and interior design typologies does Inovador specialize in?",
+    "answer": "Inovador specializes in luxury private residences, cliffside villas, heritage apartment restorations, biophilic landscape estates, and curated commercial/hospitality spaces. Our ethos centers around timeless spatial clarity, monolithic materiality, and natural light.",
+    "category": "Services & Scope",
+    "sortOrder": 1
+  },
+  {
+    "id": "faq-02",
+    "question": "How does your studio handle projects located outside your primary studio base?",
+    "answer": "We routinely lead projects across India (including Mumbai, Goa, Bengaluru, New Delhi, Alibaug, and Jaipur) as well as select international locations. We utilize a structured milestone model combining rigorous on-site architectural supervision during critical casting/joinery phases with continuous digital BIM coordination.",
+    "category": "Geography & Process",
+    "sortOrder": 2
+  },
+  {
+    "id": "faq-03",
+    "question": "What is the typical timeline from initial discovery to completion?",
+    "answer": "Timelines depend on project scale and typology. Comprehensive luxury interior architecture projects typically span 8 to 14 months, while ground-up residential villas and coastal estates span 18 to 28 months from conceptual design to turnkey handover.",
+    "category": "Timelines",
+    "sortOrder": 3
+  },
+  {
+    "id": "faq-04",
+    "question": "Do you provide end-to-end turnkey execution or purely design consultancy?",
+    "answer": "We offer both models. While our core expertise is comprehensive architectural and interior design consultancy, we frequently provide full Turnkey Execution & Art Direction via our vetted network of specialized contractors and master joiners to ensure design fidelity.",
+    "category": "Execution",
+    "sortOrder": 4
+  },
+  {
+    "id": "faq-05",
+    "question": "How do we initiate a prospective project inquiry with Inovador?",
+    "answer": "You can begin by submitting the inquiry form below with your project location, approximate area, typology, and timeline aspirations. Our studio directors review each brief and schedule an initial discovery conversation within 48 business hours.",
+    "category": "Getting Started",
+    "sortOrder": 5
+  }
+]

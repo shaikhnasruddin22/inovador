@@ -1,0 +1,156 @@
+[
+  {
+    "id": "proj-01",
+    "title": "The Raw Stone Pavilion",
+    "slug": "the-raw-stone-pavilion",
+    "city": "Goa",
+    "category": "Architecture",
+    "year": 2024,
+    "shortDescription": "A monolithic coastal residence framed by basalt stone, cantilevered timber decks, and native coastal flora.",
+    "fullDescription": "Situated on a rugged cliff overlooking the Arabian Sea in North Goa, The Raw Stone Pavilion explores the dialogue between brutalist massing and tropical lightness. The structure utilizes locally quarried Laterite and basalt stone to ground the residence, while deep cantilevered teak brise-soleil screen the intense tropical sunlight.\n\nThe ground level is designed as a continuous flowing volume—dissolving the threshold between internal living spaces and the surrounding coconut grove. Rainwater harvesting channels are integrated sculpturally into the stone courtyards, creating reflective water bodies that naturally cool the lower floor through convective airflow.",
+    "coverImage": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=1600&auto=format&fit=crop"
+    ],
+    "beforeImage": "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?q=80&w=1200&auto=format&fit=crop",
+    "afterImage": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop",
+    "featured": true,
+    "stats": {
+      "area": "6,400 sq.ft",
+      "scope": "Architecture & Landscape",
+      "location": "Anjuna, Goa",
+      "year": 2024,
+      "timeline": "22 Months"
+    },
+    "sortOrder": 1
+  },
+  {
+    "id": "proj-02",
+    "title": "Apartment 702 at Marine Drive",
+    "slug": "apartment-702-marine-drive",
+    "city": "Mumbai",
+    "category": "Interior",
+    "year": 2024,
+    "shortDescription": "Art Deco restoration transformed into a serene sanctuary of fluted glass, brushed bronze, and travertine marble.",
+    "fullDescription": "Located within an iconic 1930s Art Deco building along Mumbai's Marine Drive, Apartment 702 was completely reimagined to honor its heritage proportions while introducing a contemporary sense of quiet luxury.\n\nWe restored the curved plaster moldings and introduced custom fluted walnut partitions that filter light between the ocean-facing salon and private library. Materials were selected for their tactile restraint: honed Roman travertine, sand-cast bronze hardware, lime-washed plaster walls, and hand-loomed silk drapery.",
+    "coverImage": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1600&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=1600&auto=format&fit=crop"
+    ],
+    "beforeImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop",
+    "afterImage": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200&auto=format&fit=crop",
+    "featured": true,
+    "stats": {
+      "area": "3,800 sq.ft",
+      "scope": "Interior Architecture & Styling",
+      "location": "Marine Drive, Mumbai",
+      "year": 2024,
+      "timeline": "14 Months"
+    },
+    "sortOrder": 2
+  },
+  {
+    "id": "proj-03",
+    "title": "Verdant Terrace & Courtyards",
+    "slug": "verdant-terrace-courtyards",
+    "city": "Bengaluru",
+    "category": "Landscape",
+    "year": 2023,
+    "shortDescription": "A tiered biophilic rooftop landscape integrating indigenous flora, basalt stepping stones, and microclimate shading.",
+    "fullDescription": "Designed as an urban sanctuary above the bustling tech corridor of Bengaluru, this multi-tier landscape terrace transforms a barren rooftop into a layered ecological haven.\n\nWe engineered lightweight volcanic aggregate soil beds planted with drought-resilient ferns, wild grasses, and frangipani trees. Cascading water channels oxygenate the air, creating a restorative acoustic buffer from the city below.",
+    "coverImage": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1600&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600&auto=format&fit=crop"
+    ],
+    "featured": true,
+    "stats": {
+      "area": "5,200 sq.ft",
+      "scope": "Landscape Architecture",
+      "location": "Indiranagar, Bengaluru",
+      "year": 2023,
+      "timeline": "8 Months"
+    },
+    "sortOrder": 3
+  },
+  {
+    "id": "proj-04",
+    "title": "Courtyard House of Light",
+    "slug": "courtyard-house-of-light",
+    "city": "Alibaug",
+    "category": "Architecture",
+    "year": 2023,
+    "shortDescription": "A weekend retreat organized around twin central courtyards, exposed board-formed concrete, and reclaimed teakwood.",
+    "fullDescription": "Located amidst betel nut plantations in Alibaug, this residence is designed around the traditional Indian 'Chowk' (courtyard) concept, reinterpreted through board-formed architectural concrete and minimalist steel trusses.\n\nThe house breathes naturally through louvered operable screens, eliminating the need for constant mechanical cooling. An infinity pool clad in local Sukabumi green stone mirrors the coastal canopy.",
+    "coverImage": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=1600&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600573472592-401b489a3cdc?q=80&w=1600&auto=format&fit=crop"
+    ],
+    "featured": true,
+    "stats": {
+      "area": "8,100 sq.ft",
+      "scope": "Masterplanning & Architecture",
+      "location": "Awas, Alibaug",
+      "year": 2023,
+      "timeline": "26 Months"
+    },
+    "sortOrder": 4
+  },
+  {
+    "id": "proj-05",
+    "title": "Maison Sol — Spatial & Brand Identity",
+    "slug": "maison-sol-brand-identity",
+    "city": "Mumbai",
+    "category": "Branding",
+    "year": 2024,
+    "shortDescription": "Holistic brand identity, spatial typography, and material packaging for a bespoke heritage perfumery salon.",
+    "fullDescription": "Inovador Design Studio was commissioned to formulate both the architectural presence and the complete brand universe for Maison Sol, a high-perfumery house in South Mumbai.\n\nFrom bespoke brass signage and custom travertine counters to tactile linen packaging and editorial typographic guidelines, every touchpoint delivers an atmosphere of understated sensory distinction.",
+    "coverImage": "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?q=80&w=1600&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=1600&auto=format&fit=crop"
+    ],
+    "featured": false,
+    "stats": {
+      "area": "1,400 sq.ft",
+      "scope": "Branding & Spatial Design",
+      "location": "Kala Ghoda, Mumbai",
+      "year": 2024,
+      "timeline": "6 Months"
+    },
+    "sortOrder": 5
+  },
+  {
+    "id": "proj-06",
+    "title": "The Monolith Gallery & Penthouse",
+    "slug": "the-monolith-gallery-penthouse",
+    "city": "New Delhi",
+    "category": "Interior",
+    "year": 2024,
+    "shortDescription": "A curated private art collector's triplex penthouse with museum-grade lighting, cast bronze details, and lime wash.",
+    "fullDescription": "Designed for a distinguished contemporary Indian art collector, this 9,000 sq.ft penthouse in New Delhi balances the rigorous demands of museum conservation with the warmth of a luxury family home.\n\nWe implemented recessed indirect daylight coves, acoustic micro-perforated oak ceilings, and seamlessly integrated climate zones that safeguard delicate canvas and sculptural works while maintaining sweeping views over the Delhi Ridge forest.",
+    "coverImage": "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?q=80&w=1600&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?q=80&w=1600&auto=format&fit=crop"
+    ],
+    "featured": false,
+    "stats": {
+      "area": "9,000 sq.ft",
+      "scope": "Interior Architecture & Lighting",
+      "location": "Chanakyapuri, New Delhi",
+      "year": 2024,
+      "timeline": "18 Months"
+    },
+    "sortOrder": 6
+  }
+]

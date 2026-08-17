@@ -1,0 +1,30 @@
+[
+  {
+    "id": "awd-01",
+    "title": "Architectural Digest Top 50 Studios",
+    "publication": "Architectural Digest",
+    "year": 2024,
+    "badgeText": "AD50 2024"
+  },
+  {
+    "id": "awd-02",
+    "title": "Best Coastal Residence of the Year",
+    "publication": "Elle Décor International",
+    "year": 2024,
+    "badgeText": "EDIDA Winner"
+  },
+  {
+    "id": "awd-03",
+    "title": "Excellence in Sustainable Biophilic Design",
+    "publication": "World Architecture Community",
+    "year": 2023,
+    "badgeText": "WAC Design Award"
+  },
+  {
+    "id": "awd-04",
+    "title": "Heritage Restoration & Adaptive Reuse Merit",
+    "publication": "Indian Institute of Architects",
+    "year": 2023,
+    "badgeText": "IIA National Honor"
+  }
+]

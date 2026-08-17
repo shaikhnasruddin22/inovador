@@ -1,0 +1,86 @@
+[
+  {
+    "id": "srv-01",
+    "name": "Architectural Design",
+    "slug": "architectural-design",
+    "iconName": "Building2",
+    "shortDescription": "Monolithic residential villas, bespoke pavilions, and cultural landmarks shaped by structural honesty and local climatic context.",
+    "deliverables": [
+      "Site Masterplanning & Solar Massing",
+      "Comprehensive Architectural Blueprints",
+      "Structural Coordination & Façade Engineering",
+      "Authority Approvals & Statutory Submissions"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "id": "srv-02",
+    "name": "Interior Architecture",
+    "slug": "interior-architecture",
+    "iconName": "Layers",
+    "shortDescription": "Tailored living spaces, bespoke millwork, and tactile materiality composed with an uncompromising sense of spatial balance.",
+    "deliverables": [
+      "Spatial Layout & Circulation Optimization",
+      "Custom Joinery & Bespoke Furniture Design",
+      "Lighting Design & Acoustic Engineering",
+      "Curated Material, Textile & Stone Sourcing"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "id": "srv-03",
+    "name": "Landscape & Biophilic Planning",
+    "slug": "landscape-design",
+    "iconName": "Trees",
+    "shortDescription": "Endemic planting palettes, meditative water features, and outdoor living pavilions that seamlessly merge architecture with nature.",
+    "deliverables": [
+      "Microclimate & Topographic Analysis",
+      "Hardscape & Outdoor Terrace Engineering",
+      "Endemic Flora & Water Conservation Systems",
+      "Illumination & Outdoor Living Integration"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "id": "srv-04",
+    "name": "Historic Renovation & Adaptive Reuse",
+    "slug": "renovation-adaptive-reuse",
+    "iconName": "RefreshCw",
+    "shortDescription": "Sensitive architectural restorations that celebrate heritage proportions while integrating modern infrastructure and climate control.",
+    "deliverables": [
+      "Heritage Structural Assessment",
+      "Historic Fabric Restoration & Conservation",
+      "Modern HVAC & Electrical Retrofitting",
+      "Contemporary Spatial Reconfigurations"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "id": "srv-05",
+    "name": "Brand & Spatial Identity",
+    "slug": "brand-spatial-identity",
+    "iconName": "Compass",
+    "shortDescription": "Unified brand universes for hospitality, retail salons, and residential developments—from architectural signage to print collateral.",
+    "deliverables": [
+      "Spatial Typographic Systems & Signage",
+      "Brand Narrative & Material Storyboards",
+      "Tactile Packaging & Collateral Curation",
+      "Sensory & Acoustic Brand Guidelines"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "id": "srv-06",
+    "name": "Turnkey Execution & Art Direction",
+    "slug": "turnkey-execution",
+    "iconName": "Sparkles",
+    "shortDescription": "End-to-end site oversight, artisanal contractor coordination, and final art curation to ensure seamless realization.",
+    "deliverables": [
+      "Master Construction Programming",
+      "Quality Assurance & Material Inspections",
+      "Art Advisory & Collector Curation",
+      "White-Glove Handover & Commissioning"
+    ],
+    "sortOrder": 6
+  }
+]

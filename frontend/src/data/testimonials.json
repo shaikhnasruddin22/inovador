@@ -1,0 +1,26 @@
+[
+  {
+    "id": "tst-01",
+    "clientName": "Vikram & Ananya Singhania",
+    "roleOrLocation": "Goa Coastal Villa",
+    "quote": "Inovador transformed our cliffside plot in Goa into a breathtaking sanctuary. Their command of raw materials, natural daylight, and coastal microclimates resulted in a home that feels both monumental and intensely intimate.",
+    "projectReference": "The Raw Stone Pavilion",
+    "sortOrder": 1
+  },
+  {
+    "id": "tst-02",
+    "clientName": "Devika Mehra",
+    "roleOrLocation": "Marine Drive Heritage Apartment",
+    "quote": "The team’s respect for Art Deco proportions paired with modern acoustic and lighting finesse was extraordinary. Every detail—from the fluted walnut screens to the bronze thresholds—was crafted with couture precision.",
+    "projectReference": "Apartment 702 at Marine Drive",
+    "sortOrder": 2
+  },
+  {
+    "id": "tst-03",
+    "clientName": "Rajiv & Sunita Somani",
+    "roleOrLocation": "Alibaug Weekend Estate",
+    "quote": "Working with Inovador was a masterclass in architectural clarity. They did not just design a house; they curated the entire spatial ritual of our weekends. Their turnkey supervision meant zero stress from groundbreaking to handover.",
+    "projectReference": "Courtyard House of Light",
+    "sortOrder": 3
+  }
+]
