@@ -18,19 +18,21 @@
    - SSG for static pages (About, Process, Services)
    - ISR for Projects (revalidate on a timer or via webhook)
    - Client-side fetch for filter interactions (city/category)
+   - Optimized image delivery via next/image
       |
-      | REST/GraphQL calls
-      v
-[Strapi API — Node.js, hosted separately]
-   - Content types: Project, Testimonial, Service, FAQ, Inquiry
-   - Admin UI at /admin — studio logs in here to manage content
-   - Auth: Strapi's built-in role-based access (Admin role for studio staff)
-      |
-      v
-[MySQL Database]
+      +-----------------------------+
+      |                             |
+      | REST/Data calls             | Media assets from CDN
+      v                             v
+[Strapi API Engine]        [Cloudinary CDN]
+   ├── MySQL Datastore           ^
+   │   (Content models)          |
+   └── Cloudinary Plugin --------+ (Media uploads & transforms)
 
-[Media assets] --> [Cloudinary/S3] <-- uploaded via Strapi's media library
-[Inquiry submissions] --> stored in MySQL AND --> [Resend/SendGrid] --> studio email inbox
+[Inquiry Pipeline]:
+[Visitor] -> [Next.js /api/inquiry] -> [Zod + Turnstile + Honeypot]
+                   ├──> [Strapi API] -> [MySQL Database] (Status: "new")
+                   └──> [Resend API] -> [Studio Notification Inbox]
 ```
 
 ## 3. Component Breakdown

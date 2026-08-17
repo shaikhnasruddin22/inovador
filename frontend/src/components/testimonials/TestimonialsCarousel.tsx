@@ -24,7 +24,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
   }
 
   return (
-    <section className="section-spacing bg-[var(--bg-secondary)] border-t border-[var(--border-light)] overflow-hidden">
+    <section id="testimonials" className="section-spacing bg-[var(--bg-secondary)] border-t border-[var(--border-light)] overflow-hidden">
       <Container>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
