@@ -1,0 +1,18 @@
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env*.local
+!.env.example
+
+# Strapi temporary files & cache
+.strapi/
+.cache/
+.tmp/
+build/
+dist/
+
+# Uploaded local files
+public/uploads/
+!public/uploads/.gitkeep
