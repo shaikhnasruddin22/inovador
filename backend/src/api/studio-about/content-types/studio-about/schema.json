@@ -1,0 +1,68 @@
+{
+  "kind": "singleType",
+  "collectionName": "studio_abouts",
+  "info": {
+    "singularName": "studio-about",
+    "pluralName": "studio-abouts",
+    "displayName": "Studio / About",
+    "description": "Studio identity, narrative ethos, stats, and leadership profiles"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "studioName": {
+      "type": "string",
+      "default": "Inovador Design Studio",
+      "required": true
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "heroHeadline": {
+      "type": "string"
+    },
+    "heroSubtitle": {
+      "type": "text"
+    },
+    "ethosEyebrow": {
+      "type": "string"
+    },
+    "ethosHeadline": {
+      "type": "string"
+    },
+    "ethosDescription1": {
+      "type": "text"
+    },
+    "ethosDescription2": {
+      "type": "text"
+    },
+    "yearsExperience": {
+      "type": "integer",
+      "default": 6
+    },
+    "worksCount": {
+      "type": "integer",
+      "default": 40
+    },
+    "hubsCount": {
+      "type": "integer",
+      "default": 5
+    },
+    "pillars": {
+      "type": "json"
+    },
+    "leadership": {
+      "type": "json"
+    },
+    "ctaText": {
+      "type": "string",
+      "default": "Start a Commission"
+    },
+    "ctaLink": {
+      "type": "string",
+      "default": "/#contact"
+    }
+  }
+}

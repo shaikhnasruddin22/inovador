@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "award_presses",
+  "info": {
+    "singularName": "award-press",
+    "pluralName": "award-presses",
+    "displayName": "Award & Press Item",
+    "description": "Awards and press features for Inovador Design Studio"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "publication": {
+      "type": "string",
+      "required": true
+    },
+    "year": {
+      "type": "integer",
+      "required": true
+    },
+    "badgeText": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string"
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

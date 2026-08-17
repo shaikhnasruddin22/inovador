@@ -16,28 +16,41 @@ import {
   getAwards,
   getProcessSteps,
   getServices,
+  getHeroSlides,
+  getStudioAbout,
 } from '@/lib/api';
 
 export default async function HomePage() {
-  const [projects, testimonials, faqs, awards, processSteps, services] = await Promise.all([
+  const [
+    heroSlides,
+    projects,
+    studioAbout,
+    processSteps,
+    services,
+    testimonials,
+    awards,
+    faqs,
+  ] = await Promise.all([
+    getHeroSlides(),
     getProjects(),
-    getTestimonials(),
-    getFAQs(),
-    getAwards(),
+    getStudioAbout(),
     getProcessSteps(),
     getServices(),
+    getTestimonials(),
+    getAwards(),
+    getFAQs(),
   ]);
 
   return (
     <>
       {/* 1. Hero Slider with Cinematic Motion */}
-      <HeroSlider />
+      <HeroSlider slides={heroSlides} />
 
       {/* 2. Featured Projects with Layout Animations */}
       <FeaturedProjects initialProjects={projects} />
 
       {/* 3. About Studio Teaser with Animated Counters */}
-      <AboutTeaser />
+      <AboutTeaser aboutData={studioAbout} />
 
       {/* 4. Architectural Process with Progressive Reveal */}
       <ProcessGrid steps={processSteps} />

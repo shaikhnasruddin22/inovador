@@ -1,12 +1,17 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { AboutContent } from '@/components/about/AboutContent';
+import { getStudioAbout } from '@/lib/api';
 
-export const metadata: Metadata = {
-  title: 'About The Studio | Ethos, Leadership & Architectural Philosophy',
-  description: 'Inovador Design Studio is an architectural and interior practice founded on material honesty, contextual responsiveness, and spatial stillness.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const about = await getStudioAbout();
+  return {
+    title: `About The Studio | ${about.studioName}`,
+    description: about.heroSubtitle || about.ethosDescription1,
+  };
+}
 
-export default function AboutPage() {
-  return <AboutContent />;
+export default async function AboutPage() {
+  const studioAbout = await getStudioAbout();
+  return <AboutContent aboutData={studioAbout} />;
 }

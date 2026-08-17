@@ -31,6 +31,14 @@ module.exports = {
           'api::service.service.findOne',
           'api::faq.faq.find',
           'api::faq.faq.findOne',
+          'api::hero-slide.hero-slide.find',
+          'api::hero-slide.hero-slide.findOne',
+          'api::process-step.process-step.find',
+          'api::process-step.process-step.findOne',
+          'api::award-press.award-press.find',
+          'api::award-press.award-press.findOne',
+          'api::studio-about.studio-about.find',
+          'api::studio-about.studio-about.findOne',
           'api::inquiry.inquiry.create', // Only CREATE allowed; find/findOne remain 403
         ];
 
@@ -56,15 +64,11 @@ module.exports = {
         }
       }
 
-      // 2. Automated Seed / Migration from mock JSON if tables are empty
+      const frontendDataDir = path.resolve(__dirname, '../../frontend/src/data');
+
+      // 2. Seed Projects
       const projectCount = await strapi.db.query('api::project.project').count();
-
       if (projectCount === 0) {
-        strapi.log.info('Seeding initial mock data into Strapi MySQL database...');
-
-        const frontendDataDir = path.resolve(__dirname, '../../frontend/src/data');
-
-        // Seed Projects
         const projectsFile = path.join(frontendDataDir, 'projects.json');
         if (fs.existsSync(projectsFile)) {
           const projectsData = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
@@ -87,8 +91,11 @@ module.exports = {
           }
           strapi.log.info(`Seeded ${projectsData.length} projects.`);
         }
+      }
 
-        // Seed Testimonials
+      // 3. Seed Testimonials
+      const testimonialCount = await strapi.db.query('api::testimonial.testimonial').count();
+      if (testimonialCount === 0) {
         const testimonialsFile = path.join(frontendDataDir, 'testimonials.json');
         if (fs.existsSync(testimonialsFile)) {
           const testimonialsData = JSON.parse(fs.readFileSync(testimonialsFile, 'utf8'));
@@ -105,8 +112,11 @@ module.exports = {
           }
           strapi.log.info(`Seeded ${testimonialsData.length} testimonials.`);
         }
+      }
 
-        // Seed Services
+      // 4. Seed Services
+      const serviceCount = await strapi.db.query('api::service.service').count();
+      if (serviceCount === 0) {
         const servicesFile = path.join(frontendDataDir, 'services.json');
         if (fs.existsSync(servicesFile)) {
           const servicesData = JSON.parse(fs.readFileSync(servicesFile, 'utf8'));
@@ -125,8 +135,11 @@ module.exports = {
           }
           strapi.log.info(`Seeded ${servicesData.length} services.`);
         }
+      }
 
-        // Seed FAQs
+      // 5. Seed FAQs
+      const faqCount = await strapi.db.query('api::faq.faq').count();
+      if (faqCount === 0) {
         const faqFile = path.join(frontendDataDir, 'faq.json');
         if (fs.existsSync(faqFile)) {
           const faqData = JSON.parse(fs.readFileSync(faqFile, 'utf8'));
@@ -143,26 +156,173 @@ module.exports = {
           }
           strapi.log.info(`Seeded ${faqData.length} FAQs.`);
         }
+      }
 
-        // Seed Initial Test Inquiry (Private, internal verification)
-        const inquiryCount = await strapi.db.query('api::inquiry.inquiry').count();
-        if (inquiryCount === 0) {
-          await strapi.db.query('api::inquiry.inquiry').create({
+      // 6. Seed Hero Slides
+      const heroSlideCount = await strapi.db.query('api::hero-slide.hero-slide').count();
+      if (heroSlideCount === 0) {
+        const heroSlides = [
+          {
+            title: 'Architecture in Dialogue with Landscape & Sea',
+            eyebrow: 'Private Coastal Residence',
+            location: 'Anjuna, Goa',
+            projectSlug: 'the-raw-stone-pavilion',
+            imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000&auto=format&fit=crop',
+            sortOrder: 1,
+            active: true,
+          },
+          {
+            title: 'Art Deco Proportions & Tactile Travertine Marble',
+            eyebrow: 'Heritage Interior Architecture',
+            location: 'Marine Drive, Mumbai',
+            projectSlug: 'apartment-702-marine-drive',
+            imageUrl: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=2000&auto=format&fit=crop',
+            sortOrder: 2,
+            active: true,
+          },
+          {
+            title: 'Monolithic Concrete & Shaded Spatial Flow',
+            eyebrow: 'Monolithic Courtyard Estate',
+            location: 'Awas, Alibaug',
+            projectSlug: 'courtyard-house-of-light',
+            imageUrl: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2000&auto=format&fit=crop',
+            sortOrder: 3,
+            active: true,
+          },
+        ];
+        for (const slide of heroSlides) {
+          await strapi.db.query('api::hero-slide.hero-slide').create({
             data: {
-              name: 'Dr. Siddharth & Radhika Singhania',
-              email: 'patron@inovador-brief.example',
-              phone: '+91 98200 12345',
-              projectType: 'Architecture & Residential Villa',
-              timeline: 'Within 6 Months',
-              message: 'Looking to commission a 5,000 sq.ft cliffside residence in North Goa focusing on raw laterite and passive ventilation.',
-              status: 'new',
+              ...slide,
+              publishedAt: new Date(),
             },
           });
-          strapi.log.info('Seeded test inquiry brief for Studio Editor verification.');
         }
-
-        strapi.log.info('Initial Strapi database seeding completed successfully.');
+        strapi.log.info(`Seeded ${heroSlides.length} hero slides.`);
       }
+
+      // 7. Seed Process Steps
+      const processCount = await strapi.db.query('api::process-step.process-step').count();
+      if (processCount === 0) {
+        const processFile = path.join(frontendDataDir, 'process.json');
+        if (fs.existsSync(processFile)) {
+          const processData = JSON.parse(fs.readFileSync(processFile, 'utf8'));
+          for (let i = 0; i < processData.length; i++) {
+            const step = processData[i];
+            await strapi.db.query('api::process-step.process-step').create({
+              data: {
+                stepNumber: step.number,
+                title: step.title,
+                subtitle: step.subtitle,
+                description: step.description,
+                sortOrder: i + 1,
+                active: true,
+                publishedAt: new Date(),
+              },
+            });
+          }
+          strapi.log.info(`Seeded ${processData.length} process steps.`);
+        }
+      }
+
+      // 8. Seed Awards & Press
+      const awardCount = await strapi.db.query('api::award-press.award-press').count();
+      if (awardCount === 0) {
+        const awardsFile = path.join(frontendDataDir, 'awards.json');
+        if (fs.existsSync(awardsFile)) {
+          const awardsData = JSON.parse(fs.readFileSync(awardsFile, 'utf8'));
+          for (let i = 0; i < awardsData.length; i++) {
+            const award = awardsData[i];
+            await strapi.db.query('api::award-press.award-press').create({
+              data: {
+                title: award.title,
+                publication: award.publication,
+                year: award.year,
+                badgeText: award.badgeText,
+                sortOrder: i + 1,
+                active: true,
+                publishedAt: new Date(),
+              },
+            });
+          }
+          strapi.log.info(`Seeded ${awardsData.length} awards/press items.`);
+        }
+      }
+
+      // 9. Seed Studio / About Single Type Record
+      const studioAboutCount = await strapi.db.query('api::studio-about.studio-about').count();
+      if (studioAboutCount === 0) {
+        await strapi.db.query('api::studio-about.studio-about').create({
+          data: {
+            studioName: 'Inovador Design Studio',
+            tagline: 'Architecture · Interiors · Landscapes · Spatial Identities',
+            heroHeadline: 'Sculpting sanctuaries through raw materiality & contextual rigor.',
+            heroSubtitle: 'We are an interdisciplinary studio of architects, interior designers, and landscape planners dedicated to creating enduring spaces that celebrate the ritual of daily dwelling.',
+            ethosEyebrow: 'The Inovador Ethos',
+            ethosHeadline: 'Architecture grounded in material honesty & spatial stillness.',
+            ethosDescription1: 'Founded in 2018, Inovador Design Studio is an architecture and spatial practice operating across Mumbai, Goa, Bengaluru, and Alibaug. We reject arbitrary decoration in favor of structural clarity, native masonry, and the tactile poetry of natural daylight.',
+            ethosDescription2: 'Every project is approached as an ecological and cultural artifact—forged through deep collaboration with master craftsmen, stone masons, and local fabricators.',
+            yearsExperience: 6,
+            worksCount: 40,
+            hubsCount: 5,
+            pillars: [
+              {
+                title: 'Material Honesty & Structural Clarity',
+                description: 'We let materials speak their natural dialect. Basalt stone remains textured, lime-plaster breathes with the seasons, and raw timber patinas gracefully over decades.',
+              },
+              {
+                title: 'Contextual & Biophilic Architecture',
+                description: 'Every building is an organic extension of its landscape. We study sun paths, monsoon wind corridors, and topography to craft passive microclimates that reduce ecological footprint.',
+              },
+              {
+                title: 'Artisanal Craft & Millimeter Tolerances',
+                description: 'We bridge architectural design with traditional master craftsmanship. Every joint, reveal, and bespoke brass fixture is engineered with couture precision.',
+              },
+              {
+                title: 'Spatial Restraint & Quiet Luxury',
+                description: 'We avoid transient trends and superfluous ornamentation. True luxury is found in generous proportions, rhythmic daylight, and spaces that invite quiet reflection.',
+              },
+            ],
+            leadership: [
+              {
+                name: 'Aarav Mehta',
+                role: 'Principal Architect & Founder',
+                bio: 'Trained at the Architectural Association (AA London) and CEPT Ahmedabad, Aarav brings over 14 years of experience formulating monolithic residential villas and public pavilions across South Asia.',
+                image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop',
+              },
+              {
+                name: 'Rhea Sengupta',
+                role: 'Director of Interior Architecture & Spatial Identity',
+                bio: 'Specializing in heritage restoration and bespoke material curation, Rhea oversees all interior joinery, bespoke lighting engineering, and art advisory commissions at Inovador.',
+                image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop',
+              },
+            ],
+            ctaText: 'Start a Commission',
+            ctaLink: '/#contact',
+            publishedAt: new Date(),
+          },
+        });
+        strapi.log.info('Seeded Studio / About single-type record.');
+      }
+
+      // 10. Seed Initial Test Inquiry (Private, internal verification)
+      const inquiryCount = await strapi.db.query('api::inquiry.inquiry').count();
+      if (inquiryCount === 0) {
+        await strapi.db.query('api::inquiry.inquiry').create({
+          data: {
+            name: 'Dr. Siddharth & Radhika Singhania',
+            email: 'patron@inovador-brief.example',
+            phone: '+91 98200 12345',
+            projectType: 'Architecture & Residential Villa',
+            timeline: 'Within 6 Months',
+            message: 'Looking to commission a 5,000 sq.ft cliffside residence in North Goa focusing on raw laterite and passive ventilation.',
+            status: 'new',
+          },
+        });
+        strapi.log.info('Seeded test inquiry brief for Studio Editor verification.');
+      }
+
+      strapi.log.info('Initial Strapi database seeding and schema configuration verified.');
     } catch (err) {
       strapi.log.error('Bootstrap initialization error: ', err);
     }

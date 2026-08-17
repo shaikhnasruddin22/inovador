@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Pagination, Keyboard, A11y } from 'swiper/modules';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { HeroSlide } from '@/types';
 import { Container } from '@/components/layout/Container';
 import { EASE_EDITORIAL, EASE_CINEMATIC } from '@/lib/utils/animations';
 
@@ -14,43 +15,45 @@ import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
 
-interface HeroSlide {
-  id: string;
-  image: string;
-  eyebrow: string;
-  headline: string;
-  location: string;
-  projectSlug: string;
-}
-
-const HERO_SLIDES: HeroSlide[] = [
+const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   {
     id: 'slide-1',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000&auto=format&fit=crop',
     eyebrow: 'Private Coastal Residence',
-    headline: 'Architecture in Dialogue with Landscape & Sea',
+    title: 'Architecture in Dialogue with Landscape & Sea',
     location: 'Anjuna, Goa',
     projectSlug: 'the-raw-stone-pavilion',
+    sortOrder: 1,
+    active: true,
   },
   {
     id: 'slide-2',
     image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=2000&auto=format&fit=crop',
     eyebrow: 'Heritage Interior Architecture',
-    headline: 'Art Deco Proportions & Tactile Travertine Marble',
+    title: 'Art Deco Proportions & Tactile Travertine Marble',
     location: 'Marine Drive, Mumbai',
     projectSlug: 'apartment-702-marine-drive',
+    sortOrder: 2,
+    active: true,
   },
   {
     id: 'slide-3',
     image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2000&auto=format&fit=crop',
     eyebrow: 'Monolithic Courtyard Estate',
-    headline: 'Monolithic Concrete & Shaded Spatial Flow',
+    title: 'Monolithic Concrete & Shaded Spatial Flow',
     location: 'Awas, Alibaug',
     projectSlug: 'courtyard-house-of-light',
+    sortOrder: 3,
+    active: true,
   },
 ];
 
-export function HeroSlider() {
+interface HeroSliderProps {
+  slides?: HeroSlide[];
+}
+
+export function HeroSlider({ slides = [] }: HeroSliderProps) {
+  const heroSlides = slides.length > 0 ? slides : DEFAULT_HERO_SLIDES;
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -74,141 +77,133 @@ export function HeroSlider() {
         effect="fade"
         speed={1200}
         autoplay={{
-          delay: 7000,
+          delay: 6500,
           disableOnInteraction: false,
-          pauseOnMouseEnter: true,
         }}
-        loop={true}
-        keyboard={{ enabled: true }}
         pagination={{
           clickable: true,
-          el: '.hero-pagination',
+          el: '.hero-custom-pagination',
+          bulletClass: 'hero-bullet',
+          bulletActiveClass: 'hero-bullet-active',
         }}
+        keyboard={{ enabled: true }}
+        loop={heroSlides.length > 1}
         onSlideChange={(swiper) => setActiveSlideIndex(swiper.realIndex)}
         className="w-full h-full"
       >
-        {HERO_SLIDES.map((slide, index) => {
-          const isActive = activeSlideIndex === index;
-          return (
-            <SwiperSlide key={slide.id} className="relative w-full h-full">
-              {/* Background Image with Cinematic Settle & Scroll-Linked Parallax */}
-              <motion.div
-                style={{ scale: imageScale }}
-                className="absolute inset-0 z-0 overflow-hidden"
-              >
-                <motion.div
-                  initial={{ scale: 1.06, opacity: 0 }}
-                  animate={{
-                    scale: isActive ? 1 : 1.04,
-                    opacity: 1,
-                  }}
-                  transition={{ duration: 1.6, ease: EASE_CINEMATIC }}
-                  className="relative w-full h-full"
-                >
-                  <Image
-                    src={slide.image}
-                    alt={slide.headline}
-                    fill
-                    priority={index === 0}
-                    sizes="100vw"
-                    className="object-cover object-center"
-                  />
-                  {/* Subtle tonal gradient for editorial typography contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/25" />
-                </motion.div>
-              </motion.div>
+        {heroSlides.map((slide, index) => (
+          <SwiperSlide key={slide.id} className="relative w-full h-full">
+            {/* Background Image Container with Cinematic Pan/Zoom */}
+            <motion.div
+              style={{ scale: imageScale }}
+              className="absolute inset-0 w-full h-full overflow-hidden"
+            >
+              <Image
+                src={slide.image}
+                alt={slide.title}
+                fill
+                priority={index === 0}
+                sizes="100vw"
+                className={`object-cover object-center transition-transform duration-[8000ms] ease-out will-change-transform ${
+                  activeSlideIndex === index ? 'scale-105' : 'scale-100'
+                }`}
+              />
+              {/* Refined Architectural Gradient Overlays */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/25" />
+              <div className="absolute inset-0 bg-black/20" />
+            </motion.div>
 
-              {/* Slide Content with Upward Stagger */}
+            {/* Slide Content Layer */}
+            <Container className="relative h-full flex flex-col justify-end pb-24 sm:pb-28 lg:pb-32 z-10">
               <motion.div
                 style={{ y: contentY, opacity: contentOpacity }}
-                className="relative z-10 w-full h-full flex flex-col justify-end pb-24 md:pb-28"
+                className="max-w-4xl"
               >
-                <Container>
-                  <div className="max-w-4xl">
-                    {/* Eyebrow & Location */}
-                    <motion.div
-                      key={`eyebrow-${slide.id}-${isActive}`}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.1, ease: EASE_EDITORIAL }}
-                      className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-[var(--accent-terracotta)] font-sans font-medium mb-4"
+                {/* Eyebrow / Typology Badge */}
+                <div className="overflow-hidden mb-4">
+                  <motion.div
+                    key={`eyebrow-${activeSlideIndex}`}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, ease: EASE_EDITORIAL }}
+                    className="inline-flex items-center gap-3"
+                  >
+                    <span className="w-6 h-[1px] bg-[var(--accent-terracotta)]" />
+                    <span className="text-xs uppercase tracking-[0.24em] font-sans font-medium text-[var(--accent-terracotta)]">
+                      {slide.eyebrow}
+                    </span>
+                    <span className="text-xs text-[#A8A29A] font-sans font-light">·</span>
+                    <span className="text-xs tracking-wider uppercase font-sans text-[#D4CEC5]">
+                      {slide.location}
+                    </span>
+                  </motion.div>
+                </div>
+
+                {/* Primary Editorial Headline */}
+                <div className="overflow-hidden mb-8">
+                  <motion.h1
+                    key={`headline-${activeSlideIndex}`}
+                    initial={{ y: 40, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.1, ease: EASE_CINEMATIC }}
+                    className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light leading-[1.1] tracking-[-0.02em] text-[#FAF8F5]"
+                  >
+                    {slide.title}
+                  </motion.h1>
+                </div>
+
+                {/* Interactive Action Link with Micro-Interactions */}
+                <div className="overflow-hidden">
+                  <motion.div
+                    key={`cta-${activeSlideIndex}`}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.25, ease: EASE_EDITORIAL }}
+                  >
+                    <Link
+                      href={slide.projectSlug ? `/projects/${slide.projectSlug}` : '/#projects'}
+                      className="group inline-flex items-center gap-3 text-xs uppercase tracking-[0.18em] font-sans font-medium text-white/90 hover:text-[var(--accent-terracotta)] transition-colors py-2"
                     >
-                      <span>{slide.eyebrow}</span>
-                      <span className="w-1 h-1 rounded-full bg-white/40" />
-                      <span className="text-white/80">{slide.location}</span>
-                    </motion.div>
-
-                    {/* Headline with Masked Reveal */}
-                    <div className="overflow-hidden mb-6">
-                      <motion.h1
-                        key={`title-${slide.id}-${isActive}`}
-                        initial={{ y: 32, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.9, delay: 0.2, ease: EASE_EDITORIAL }}
-                        className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light leading-[1.08] tracking-tight text-white"
-                      >
-                        {slide.headline}
-                      </motion.h1>
-                    </div>
-
-                    {/* Editorial Brand Subtitle & Actions */}
-                    <motion.div
-                      key={`footer-${slide.id}-${isActive}`}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.35, ease: EASE_EDITORIAL }}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pt-4 border-t border-white/20"
-                    >
-                      <p className="text-sm sm:text-base text-white/80 max-w-lg font-light leading-relaxed font-sans">
-                        Sculpting timeless spatial sanctuaries through raw materiality, natural daylight, and contextual rigor.
-                      </p>
-
-                      <div className="flex items-center gap-4">
-                        <Link
-                          href={`/projects/${slide.projectSlug}`}
-                          data-cursor="view"
-                          className="inline-flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-[0.14em] font-medium bg-white/10 hover:bg-white text-white hover:text-black backdrop-blur-sm border border-white/30 hover:border-white transition-all duration-300 group active:scale-95"
-                        >
-                          <span>View Project</span>
-                          <ArrowUpRight className="w-4 h-4 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                        </Link>
-
-                        <Link
-                          href="/#projects"
-                          className="inline-flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-[0.14em] font-medium bg-[var(--accent-terracotta)] hover:bg-[var(--accent-terracotta-hover)] text-white transition-all duration-300 active:scale-95"
-                        >
-                          All Works
-                        </Link>
-                      </div>
-                    </motion.div>
-                  </div>
-                </Container>
+                      <span className="relative">
+                        Explore Commission
+                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-white/40 group-hover:bg-[var(--accent-terracotta)] transition-colors duration-300" />
+                      </span>
+                      <ArrowUpRight className="w-4 h-4 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                    </Link>
+                  </motion.div>
+                </div>
               </motion.div>
-            </SwiperSlide>
-          );
-        })}
+            </Container>
+          </SwiperSlide>
+        ))}
       </Swiper>
 
-      {/* Custom Swiper Pagination & Delayed Scroll Cue */}
-      <div className="absolute bottom-6 left-0 right-0 z-20 pointer-events-none">
-        <Container className="flex items-center justify-between pointer-events-auto">
-          <div className="hero-pagination flex gap-2" />
+      {/* Bottom Bar: Slide Counter, Custom Bullets, and Scroll Indicator */}
+      <Container className="absolute bottom-8 left-0 right-0 z-20 pointer-events-none flex items-center justify-between">
+        {/* Slide Counter / Index */}
+        <div className="flex items-center gap-3 text-xs font-sans tracking-widest text-[#A8A29A]">
+          <span className="text-white font-medium">0{activeSlideIndex + 1}</span>
+          <span className="w-8 h-[1px] bg-white/30" />
+          <span>0{heroSlides.length}</span>
+        </div>
 
+        {/* Custom Pagination Bullets (Interactive) */}
+        <div className="hero-custom-pagination pointer-events-auto flex items-center gap-2" />
+
+        {/* Scroll Prompt */}
+        <a
+          href="#projects"
+          className="pointer-events-auto hidden sm:flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-[#D4CEC5] hover:text-white transition-colors group"
+        >
+          <span>Scroll</span>
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 1, ease: EASE_EDITORIAL }}
+            animate={{ y: [0, 5, 0] }}
+            transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
           >
-            <Link
-              href="/#projects"
-              className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-white/70 hover:text-white transition-colors"
-            >
-              <span>Scroll to Explore</span>
-              <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
-            </Link>
+            <ArrowDown className="w-3.5 h-3.5 text-[var(--accent-terracotta)]" />
           </motion.div>
-        </Container>
-      </div>
+        </a>
+      </Container>
     </section>
   );
 }

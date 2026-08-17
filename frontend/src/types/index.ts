@@ -46,11 +46,24 @@ export interface Service {
   sortOrder: number;
 }
 
+export interface HeroSlide {
+  id: string;
+  title: string;
+  eyebrow: string;
+  location: string;
+  projectSlug: string;
+  image: string;
+  sortOrder: number;
+  active: boolean;
+}
+
 export interface ProcessStep {
   number: string;
   title: string;
   subtitle: string;
   description: string;
+  sortOrder?: number;
+  active?: boolean;
 }
 
 export interface AwardOrPress {
@@ -59,6 +72,9 @@ export interface AwardOrPress {
   publication: string;
   year: number;
   badgeText: string;
+  url?: string;
+  sortOrder?: number;
+  active?: boolean;
 }
 
 export interface FAQItem {
@@ -67,6 +83,36 @@ export interface FAQItem {
   answer: string;
   category: string;
   sortOrder: number;
+}
+
+export interface Pillar {
+  title: string;
+  description: string;
+}
+
+export interface Leader {
+  name: string;
+  role: string;
+  bio: string;
+  image: string;
+}
+
+export interface StudioAbout {
+  studioName: string;
+  tagline: string;
+  heroHeadline: string;
+  heroSubtitle: string;
+  ethosEyebrow: string;
+  ethosHeadline: string;
+  ethosDescription1: string;
+  ethosDescription2: string;
+  yearsExperience: number;
+  worksCount: number;
+  hubsCount: number;
+  pillars: Pillar[];
+  leadership: Leader[];
+  ctaText: string;
+  ctaLink: string;
 }
 
 export interface InquiryFormData {

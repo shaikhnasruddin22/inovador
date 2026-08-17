@@ -53,13 +53,47 @@ export async function POST(req: NextRequest) {
         revalidated.push('faqs-tag', '/');
         break;
 
+      case 'hero-slide':
+      case 'heroslide':
+        revalidateTag('hero-slides', 'default');
+        revalidatePath('/', 'page');
+        revalidated.push('hero-slides-tag', '/');
+        break;
+
+      case 'process-step':
+      case 'processstep':
+        revalidateTag('process-steps', 'default');
+        revalidatePath('/', 'page');
+        revalidated.push('process-steps-tag', '/');
+        break;
+
+      case 'award-press':
+      case 'awardpress':
+        revalidateTag('awards-press', 'default');
+        revalidatePath('/', 'page');
+        revalidated.push('awards-press-tag', '/');
+        break;
+
+      case 'studio-about':
+      case 'studioabout':
+        revalidateTag('studio-about', 'default');
+        revalidatePath('/', 'page');
+        revalidatePath('/about', 'page');
+        revalidated.push('studio-about-tag', '/', '/about');
+        break;
+
       default:
         revalidatePath('/', 'page');
+        revalidatePath('/about', 'page');
         revalidateTag('projects', 'default');
         revalidateTag('services', 'default');
         revalidateTag('testimonials', 'default');
         revalidateTag('faqs', 'default');
-        revalidated.push('all-tags', '/');
+        revalidateTag('hero-slides', 'default');
+        revalidateTag('process-steps', 'default');
+        revalidateTag('awards-press', 'default');
+        revalidateTag('studio-about', 'default');
+        revalidated.push('all-tags', '/', '/about');
         break;
     }
 
