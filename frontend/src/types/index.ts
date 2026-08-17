@@ -97,9 +97,24 @@ export interface Leader {
   image: string;
 }
 
+export interface SocialLink {
+  label: string;
+  href: string;
+}
+
 export interface StudioAbout {
   studioName: string;
   tagline: string;
+  statement: string;
+  email: string;
+  phone: string;
+  mumbaiAddress: string;
+  goaAddress: string;
+  officeHours: string;
+  weekendHours: string;
+  advisoryProtocol: string;
+  locations: string[];
+  socials: SocialLink[];
   heroHeadline: string;
   heroSubtitle: string;
   ethosEyebrow: string;
@@ -111,6 +126,8 @@ export interface StudioAbout {
   hubsCount: number;
   pillars: Pillar[];
   leadership: Leader[];
+  footerHeadline: string;
+  footerDescription: string;
   ctaText: string;
   ctaLink: string;
 }

@@ -1,10 +1,23 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
+import { StudioAbout } from '@/types';
 import { STUDIO_INFO, NAV_LINKS } from '@/lib/constants';
 import { Container } from './Container';
 
-export function Footer() {
+interface FooterProps {
+  aboutData?: StudioAbout;
+}
+
+export function Footer({ aboutData }: FooterProps) {
+  const studioName = aboutData?.studioName || STUDIO_INFO.name;
+  const footerHeadline = aboutData?.footerHeadline || "Let's formulate your next spatial sanctuary.";
+  const footerDesc =
+    aboutData?.footerDescription ||
+    'We lead residential architecture, private estates, and luxury interior transformations across India and select international locales.';
+  const locations = aboutData?.locations && aboutData.locations.length > 0 ? aboutData.locations : STUDIO_INFO.locations;
+  const socials = aboutData?.socials && aboutData.socials.length > 0 ? aboutData.socials : STUDIO_INFO.socials;
+
   return (
     <footer className="bg-[var(--bg-dark)] text-[var(--text-inverse)] pt-20 pb-12 border-t border-[var(--border-dark)]">
       <Container>
@@ -12,13 +25,13 @@ export function Footer() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-[var(--border-dark)]">
           <div className="lg:col-span-7">
             <span className="text-[var(--accent-terracotta)] text-xs uppercase tracking-[0.2em] font-sans font-semibold mb-3 block">
-              Inovador Design Studio
+              {studioName}
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light leading-tight tracking-tight text-white mb-6">
-              Let&apos;s formulate your next spatial sanctuary.
+              {footerHeadline}
             </h2>
             <p className="text-[var(--text-inverse-muted)] text-base md:text-lg max-w-xl font-sans font-light leading-relaxed mb-8">
-              We lead residential architecture, private estates, and luxury interior transformations across India and select international locales.
+              {footerDesc}
             </p>
             <Link
               href="/#contact"
@@ -54,7 +67,7 @@ export function Footer() {
                 Presence
               </h3>
               <ul className="space-y-2 text-sm text-[var(--text-inverse-muted)]">
-                {STUDIO_INFO.locations.map((loc) => (
+                {locations.map((loc) => (
                   <li key={loc} className="hover:text-white transition-colors">
                     {loc}
                   </li>
@@ -65,7 +78,7 @@ export function Footer() {
                 Follow
               </h3>
               <div className="flex flex-col space-y-2 text-sm text-[var(--text-inverse-muted)]">
-                {STUDIO_INFO.socials.map((s) => (
+                {socials.map((s) => (
                   <a
                     key={s.label}
                     href={s.href}
@@ -85,7 +98,7 @@ export function Footer() {
         {/* Bottom Credits & Copyright */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[var(--text-inverse-muted)] font-sans">
           <div className="flex items-center gap-2">
-            <span>© {new Date().getFullYear()} {STUDIO_INFO.name}. All rights reserved.</span>
+            <span>© {new Date().getFullYear()} {studioName}. All rights reserved.</span>
           </div>
           <div className="flex items-center gap-6">
             <span className="text-[11px] tracking-wider uppercase">Editorial Architectural Practice</span>

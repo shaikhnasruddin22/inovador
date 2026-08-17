@@ -203,9 +203,46 @@ export function normalizeStudioAbout(raw: StrapiStudioAboutItem): StudioAbout {
     }
   }
 
+  let locations: string[] = ['Mumbai', 'Goa', 'Bengaluru', 'New Delhi', 'Alibaug'];
+  if (Array.isArray(item.locations)) {
+    locations = item.locations;
+  } else if (typeof item.locations === 'string') {
+    try {
+      locations = JSON.parse(item.locations);
+    } catch {
+      locations = ['Mumbai', 'Goa', 'Bengaluru', 'New Delhi', 'Alibaug'];
+    }
+  }
+
+  let socials = [
+    { label: 'Instagram', href: 'https://instagram.com' },
+    { label: 'LinkedIn', href: 'https://linkedin.com' },
+    { label: 'Pinterest', href: 'https://pinterest.com' },
+    { label: 'Architectural Digest', href: 'https://architecturaldigest.in' },
+  ];
+  if (Array.isArray(item.socials)) {
+    socials = item.socials;
+  } else if (typeof item.socials === 'string') {
+    try {
+      socials = JSON.parse(item.socials);
+    } catch {
+      // keep fallback
+    }
+  }
+
   return {
     studioName: item.studioName || 'Inovador Design Studio',
     tagline: item.tagline || 'Architecture · Interiors · Landscapes · Spatial Identities',
+    statement: item.statement || 'Sculpting timeless spatial sanctuaries through raw materiality, natural daylight, and contextual rigor.',
+    email: item.email || 'studio@example.com',
+    phone: item.phone || '+91 98765 43210',
+    mumbaiAddress: item.mumbaiAddress || 'Design District, Kala Ghoda, Mumbai 400001',
+    goaAddress: item.goaAddress || 'Studio Pavilion, Anjuna Coastal Road, Goa 403509',
+    officeHours: item.officeHours || 'Monday – Friday: 09:30 – 18:30 IST',
+    weekendHours: item.weekendHours || 'Saturday: By Private Appointment',
+    advisoryProtocol: item.advisoryProtocol || 'Initial consultations are conducted either at our Mumbai/Goa drawing rooms or via private video conference for overseas patrons.',
+    locations,
+    socials,
     heroHeadline:
       item.heroHeadline || 'Sculpting sanctuaries through raw materiality & contextual rigor.',
     heroSubtitle:
@@ -225,6 +262,8 @@ export function normalizeStudioAbout(raw: StrapiStudioAboutItem): StudioAbout {
     hubsCount: Number(item.hubsCount) || 5,
     pillars: pillars.length > 0 ? pillars : [],
     leadership: leadership.length > 0 ? leadership : [],
+    footerHeadline: item.footerHeadline || "Let's formulate your next spatial sanctuary.",
+    footerDescription: item.footerDescription || 'We lead residential architecture, private estates, and luxury interior transformations across India and select international locales.',
     ctaText: item.ctaText || 'Start a Commission',
     ctaLink: item.ctaLink || '/#contact',
   };

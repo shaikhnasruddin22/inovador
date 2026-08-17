@@ -11,23 +11,18 @@ export async function getTestimonials(): Promise<Testimonial[]> {
     return (mockTestimonials as Testimonial[]).sort((a, b) => a.sortOrder - b.sortOrder);
   }
 
-  try {
-    const response = await fetchAPI<StrapiTestimonialItem[]>('/api/testimonials', {
-      params: {
-        populate: '*',
-        'sort[0]': 'sortOrder:asc',
-      },
-      tags: ['testimonials'],
-      revalidate: 3600,
-    });
+  const response = await fetchAPI<StrapiTestimonialItem[]>('/api/testimonials', {
+    params: {
+      populate: '*',
+      'sort[0]': 'sortOrder:asc',
+    },
+    tags: ['testimonials'],
+    revalidate: 3600,
+  });
 
-    if (!response.data || !Array.isArray(response.data)) {
-      return (mockTestimonials as Testimonial[]).sort((a, b) => a.sortOrder - b.sortOrder);
-    }
-
-    return response.data.map(normalizeTestimonial).sort((a, b) => a.sortOrder - b.sortOrder);
-  } catch (error) {
-    console.error('[CMS getTestimonials failed, using fallback data]:', error);
-    return (mockTestimonials as Testimonial[]).sort((a, b) => a.sortOrder - b.sortOrder);
+  if (!response.data || !Array.isArray(response.data)) {
+    return [];
   }
+
+  return response.data.map(normalizeTestimonial).sort((a, b) => a.sortOrder - b.sortOrder);
 }

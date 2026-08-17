@@ -4,6 +4,7 @@ import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CustomCursor } from '@/components/ui/CustomCursor';
+import { getStudioAbout } from '@/lib/api';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     'Interior Architecture Studio',
     'Landscape Planning Bengaluru',
     'Heritage Renovation India',
-    'Bespoke Residential Design'
+    'Bespoke Residential Design',
   ],
   authors: [{ name: 'Inovador Design Studio' }],
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
@@ -62,22 +63,29 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let aboutData = null;
+  try {
+    aboutData = await getStudioAbout();
+  } catch (error) {
+    console.error('[Layout getStudioAbout warning]:', error);
+  }
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
-    name: 'Inovador Design Studio',
+    name: aboutData?.studioName || 'Inovador Design Studio',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600&auto=format&fit=crop',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-    telephone: '+91-98765-43210',
+    telephone: aboutData?.phone || '+91-98765-43210',
     priceRange: '$$$$',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Studio Inovador, Design District',
+      streetAddress: aboutData?.mumbaiAddress || 'Studio Inovador, Design District',
       addressLocality: 'Mumbai',
       addressRegion: 'Maharashtra',
       postalCode: '400001',
@@ -85,18 +93,12 @@ export default function RootLayout({
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 18.9220,
+      latitude: 18.922,
       longitude: 72.8347,
     },
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
-      dayOfWeek: [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday'
-      ],
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       opens: '09:30',
       closes: '18:30',
     },
@@ -116,7 +118,7 @@ export default function RootLayout({
         <main className="flex-grow pt-[80px] lg:pt-[90px]">
           {children}
         </main>
-        <Footer />
+        <Footer aboutData={aboutData || undefined} />
       </body>
     </html>
   );

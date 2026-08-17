@@ -41,6 +41,11 @@ export default async function HomePage() {
     getFAQs(),
   ]);
 
+  const renovationProject =
+    projects.find((p) => Boolean(p.beforeImage && p.afterImage)) ||
+    projects[1] ||
+    null;
+
   return (
     <>
       {/* 1. Hero Slider with Cinematic Motion */}
@@ -59,7 +64,7 @@ export default async function HomePage() {
       <ServicesGrid services={services} />
 
       {/* 6. Before / After Renovation Widget with Drag Hint */}
-      <BeforeAfterSlider />
+      <BeforeAfterSlider project={renovationProject} />
 
       {/* 7. Testimonials Carousel with Sequential Stagger */}
       <TestimonialsCarousel testimonials={testimonials} />
@@ -71,7 +76,7 @@ export default async function HomePage() {
       <FAQAccordion items={faqs} />
 
       {/* 10. Inquiry & Contact with Micro-Interactions */}
-      <InquirySection />
+      <InquirySection aboutData={studioAbout} />
     </>
   );
 }

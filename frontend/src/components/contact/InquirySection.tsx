@@ -3,13 +3,28 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { StudioAbout } from '@/types';
 import { Container } from '@/components/layout/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { STUDIO_INFO } from '@/lib/constants';
 import { InquiryForm } from './InquiryForm';
 import { EASE_EDITORIAL } from '@/lib/utils/animations';
 
-export function InquirySection() {
+interface InquirySectionProps {
+  aboutData?: StudioAbout;
+}
+
+export function InquirySection({ aboutData }: InquirySectionProps) {
+  const email = aboutData?.email || STUDIO_INFO.emailPlaceholder;
+  const phone = aboutData?.phone || STUDIO_INFO.phonePlaceholder;
+  const mumbaiAddress = aboutData?.mumbaiAddress || 'Design District, Kala Ghoda, Mumbai 400001';
+  const goaAddress = aboutData?.goaAddress || 'Studio Pavilion, Anjuna Coastal Road, Goa 403509';
+  const officeHours = aboutData?.officeHours || 'Monday – Friday: 09:30 – 18:30 IST';
+  const weekendHours = aboutData?.weekendHours || 'Saturday: By Private Appointment';
+  const advisoryProtocol =
+    aboutData?.advisoryProtocol ||
+    'Initial consultations are conducted either at our Mumbai/Goa drawing rooms or via private video conference for overseas patrons.';
+
   return (
     <section id="contact" className="section-spacing bg-[var(--bg-primary)] scroll-mt-20 border-t border-[var(--border-light)] overflow-hidden">
       <Container>
@@ -37,8 +52,8 @@ export function InquirySection() {
                     <span className="font-medium text-[var(--text-primary)] block mb-1">
                       Main Studios
                     </span>
-                    <p>Mumbai: Design District, Kala Ghoda, Mumbai 400001</p>
-                    <p className="mt-1">Goa: Studio Pavilion, Anjuna Coastal Road, Goa 403509</p>
+                    <p>Mumbai: {mumbaiAddress}</p>
+                    <p className="mt-1">Goa: {goaAddress}</p>
                   </div>
                 </div>
 
@@ -48,7 +63,7 @@ export function InquirySection() {
                     <span className="font-medium text-[var(--text-primary)] block mb-1">
                       Direct Studio Contact
                     </span>
-                    <p>{STUDIO_INFO.emailPlaceholder}</p>
+                    <p>{email}</p>
                   </div>
                 </div>
 
@@ -58,7 +73,7 @@ export function InquirySection() {
                     <span className="font-medium text-[var(--text-primary)] block mb-1">
                       Studio Telephone
                     </span>
-                    <p>{STUDIO_INFO.phonePlaceholder}</p>
+                    <p>{phone}</p>
                   </div>
                 </div>
 
@@ -68,8 +83,8 @@ export function InquirySection() {
                     <span className="font-medium text-[var(--text-primary)] block mb-1">
                       Studio Consultation Hours
                     </span>
-                    <p>Monday – Friday: 09:30 – 18:30 IST</p>
-                    <p>Saturday: By Private Appointment</p>
+                    <p>{officeHours}</p>
+                    <p>{weekendHours}</p>
                   </div>
                 </div>
               </div>
@@ -80,7 +95,7 @@ export function InquirySection() {
                 Advisory Protocol
               </span>
               <p className="text-xs text-[var(--text-secondary)] font-light leading-relaxed font-sans">
-                Initial consultations are conducted either at our Mumbai/Goa drawing rooms or via private video conference for overseas patrons.
+                {advisoryProtocol}
               </p>
             </div>
           </motion.div>

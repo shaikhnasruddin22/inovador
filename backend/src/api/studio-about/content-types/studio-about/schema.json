@@ -5,7 +5,7 @@
     "singularName": "studio-about",
     "pluralName": "studio-abouts",
     "displayName": "Studio / About",
-    "description": "Studio identity, narrative ethos, stats, and leadership profiles"
+    "description": "Studio identity, narrative ethos, stats, contact details, and leadership profiles"
   },
   "options": {
     "draftAndPublish": true
@@ -19,6 +19,42 @@
     },
     "tagline": {
       "type": "string"
+    },
+    "statement": {
+      "type": "text"
+    },
+    "email": {
+      "type": "string",
+      "default": "studio@example.com"
+    },
+    "phone": {
+      "type": "string",
+      "default": "+91 98765 43210"
+    },
+    "mumbaiAddress": {
+      "type": "string",
+      "default": "Design District, Kala Ghoda, Mumbai 400001"
+    },
+    "goaAddress": {
+      "type": "string",
+      "default": "Studio Pavilion, Anjuna Coastal Road, Goa 403509"
+    },
+    "officeHours": {
+      "type": "string",
+      "default": "Monday – Friday: 09:30 – 18:30 IST"
+    },
+    "weekendHours": {
+      "type": "string",
+      "default": "Saturday: By Private Appointment"
+    },
+    "advisoryProtocol": {
+      "type": "text"
+    },
+    "locations": {
+      "type": "json"
+    },
+    "socials": {
+      "type": "json"
     },
     "heroHeadline": {
       "type": "string"
@@ -55,6 +91,14 @@
     },
     "leadership": {
       "type": "json"
+    },
+    "footerHeadline": {
+      "type": "string",
+      "default": "Let's formulate your next spatial sanctuary."
+    },
+    "footerDescription": {
+      "type": "text",
+      "default": "We lead residential architecture, private estates, and luxury interior transformations across India and select international locales."
     },
     "ctaText": {
       "type": "string",

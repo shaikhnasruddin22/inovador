@@ -4,11 +4,13 @@ import React, { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { GripVertical } from 'lucide-react';
+import { Project } from '@/types';
 import { Container } from '@/components/layout/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { EASE_EDITORIAL, EASE_CINEMATIC } from '@/lib/utils/animations';
 
 interface BeforeAfterSliderProps {
+  project?: Project | null;
   beforeImage?: string;
   afterImage?: string;
   title?: string;
@@ -17,12 +19,22 @@ interface BeforeAfterSliderProps {
 }
 
 export function BeforeAfterSlider({
-  beforeImage = 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1600&auto=format&fit=crop',
-  afterImage = 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1600&auto=format&fit=crop',
-  title = 'Apartment 702 Heritage Transformation',
-  location = 'Marine Drive, Mumbai',
-  description = 'Drag the slider to reveal the contrast between the original dilapidated Art Deco shell and our restored sanctuary of honed travertine, fluted walnut, and brushed bronze.',
+  project,
+  beforeImage: propBeforeImage,
+  afterImage: propAfterImage,
+  title: propTitle,
+  location: propLocation,
+  description: propDescription,
 }: BeforeAfterSliderProps) {
+  const beforeImage = project?.beforeImage || propBeforeImage;
+  const afterImage = project?.afterImage || propAfterImage;
+  const title = project?.title || propTitle || 'Heritage Transformation';
+  const location = project?.city || propLocation || 'Mumbai';
+  const description =
+    project?.shortDescription ||
+    propDescription ||
+    'Drag the slider to reveal the contrast between the original shell and the restored architectural sanctuary.';
+
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -113,7 +125,7 @@ export function BeforeAfterSlider({
             <div className="absolute inset-0">
               <Image
                 src={afterImage}
-                alt="After architectural restoration"
+                alt={`${title} - After architectural restoration`}
                 fill
                 sizes="(max-width: 1200px) 100vw, 1200px"
                 className="object-cover object-center"
@@ -130,7 +142,7 @@ export function BeforeAfterSlider({
             >
               <Image
                 src={beforeImage}
-                alt="Before architectural restoration"
+                alt={`${title} - Before architectural restoration`}
                 fill
                 sizes="(max-width: 1200px) 100vw, 1200px"
                 className="object-cover object-center grayscale brightness-90"

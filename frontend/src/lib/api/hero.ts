@@ -3,7 +3,7 @@ import { StrapiHeroSlideItem } from '@/types/strapi';
 import { fetchAPI } from './client';
 import { normalizeHeroSlide } from './normalizers';
 
-const mockHeroSlides: HeroSlide[] = [
+export const mockHeroSlides: HeroSlide[] = [
   {
     id: 'slide-1',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000&auto=format&fit=crop',
@@ -43,26 +43,21 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
     return mockHeroSlides.sort((a, b) => a.sortOrder - b.sortOrder);
   }
 
-  try {
-    const response = await fetchAPI<StrapiHeroSlideItem[]>('/api/hero-slides', {
-      params: {
-        populate: '*',
-        'sort[0]': 'sortOrder:asc',
-      },
-      tags: ['hero-slides'],
-      revalidate: 3600,
-    });
+  const response = await fetchAPI<StrapiHeroSlideItem[]>('/api/hero-slides', {
+    params: {
+      populate: '*',
+      'sort[0]': 'sortOrder:asc',
+    },
+    tags: ['hero-slides'],
+    revalidate: 3600,
+  });
 
-    if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
-      return mockHeroSlides.sort((a, b) => a.sortOrder - b.sortOrder);
-    }
-
-    return response.data
-      .map(normalizeHeroSlide)
-      .filter((s) => s.active !== false)
-      .sort((a, b) => a.sortOrder - b.sortOrder);
-  } catch (error) {
-    console.error('[CMS getHeroSlides failed, using fallback data]:', error);
-    return mockHeroSlides.sort((a, b) => a.sortOrder - b.sortOrder);
+  if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+    return [];
   }
+
+  return response.data
+    .map(normalizeHeroSlide)
+    .filter((s) => s.active !== false)
+    .sort((a, b) => a.sortOrder - b.sortOrder);
 }

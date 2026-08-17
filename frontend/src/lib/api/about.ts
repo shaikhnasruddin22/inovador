@@ -3,9 +3,24 @@ import { StrapiStudioAboutItem } from '@/types/strapi';
 import { fetchAPI } from './client';
 import { normalizeStudioAbout } from './normalizers';
 
-const defaultStudioAbout: StudioAbout = {
+export const defaultStudioAbout: StudioAbout = {
   studioName: 'Inovador Design Studio',
   tagline: 'Architecture · Interiors · Landscapes · Spatial Identities',
+  statement: 'Sculpting timeless spatial sanctuaries through raw materiality, natural daylight, and contextual rigor.',
+  email: 'studio@example.com',
+  phone: '+91 98765 43210',
+  mumbaiAddress: 'Design District, Kala Ghoda, Mumbai 400001',
+  goaAddress: 'Studio Pavilion, Anjuna Coastal Road, Goa 403509',
+  officeHours: 'Monday – Friday: 09:30 – 18:30 IST',
+  weekendHours: 'Saturday: By Private Appointment',
+  advisoryProtocol: 'Initial consultations are conducted either at our Mumbai/Goa drawing rooms or via private video conference for overseas patrons.',
+  locations: ['Mumbai', 'Goa', 'Bengaluru', 'New Delhi', 'Alibaug'],
+  socials: [
+    { label: 'Instagram', href: 'https://instagram.com' },
+    { label: 'LinkedIn', href: 'https://linkedin.com' },
+    { label: 'Pinterest', href: 'https://pinterest.com' },
+    { label: 'Architectural Digest', href: 'https://architecturaldigest.in' },
+  ],
   heroHeadline: 'Sculpting sanctuaries through raw materiality & contextual rigor.',
   heroSubtitle:
     'We are an interdisciplinary studio of architects, interior designers, and landscape planners dedicated to creating enduring spaces that celebrate the ritual of daily dwelling.',
@@ -56,6 +71,9 @@ const defaultStudioAbout: StudioAbout = {
         'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop',
     },
   ],
+  footerHeadline: "Let's formulate your next spatial sanctuary.",
+  footerDescription:
+    'We lead residential architecture, private estates, and luxury interior transformations across India and select international locales.',
   ctaText: 'Start a Commission',
   ctaLink: '/#contact',
 };
@@ -67,19 +85,14 @@ export async function getStudioAbout(): Promise<StudioAbout> {
     return defaultStudioAbout;
   }
 
-  try {
-    const response = await fetchAPI<StrapiStudioAboutItem>('/api/studio-about', {
-      tags: ['studio-about'],
-      revalidate: 3600,
-    });
+  const response = await fetchAPI<StrapiStudioAboutItem>('/api/studio-about', {
+    tags: ['studio-about'],
+    revalidate: 3600,
+  });
 
-    if (!response.data) {
-      return defaultStudioAbout;
-    }
-
-    return normalizeStudioAbout(response.data);
-  } catch (error) {
-    console.error('[CMS getStudioAbout failed, using fallback data]:', error);
-    return defaultStudioAbout;
+  if (!response.data) {
+    throw new Error('[CMS Error]: Studio / About single-type record not found in Strapi.');
   }
+
+  return normalizeStudioAbout(response.data);
 }

@@ -137,6 +137,16 @@ export interface StrapiStudioAboutItem {
   documentId?: string;
   studioName?: string;
   tagline?: string;
+  statement?: string;
+  email?: string;
+  phone?: string;
+  mumbaiAddress?: string;
+  goaAddress?: string;
+  officeHours?: string;
+  weekendHours?: string;
+  advisoryProtocol?: string;
+  locations?: string[] | string;
+  socials?: Array<{ label: string; href: string }> | string;
   heroHeadline?: string;
   heroSubtitle?: string;
   ethosEyebrow?: string;
@@ -148,6 +158,8 @@ export interface StrapiStudioAboutItem {
   hubsCount?: number;
   pillars?: Array<{ title: string; description: string }> | string;
   leadership?: Array<{ name: string; role: string; bio: string; image: string }> | string;
+  footerHeadline?: string;
+  footerDescription?: string;
   ctaText?: string;
   ctaLink?: string;
   attributes?: Omit<StrapiStudioAboutItem, 'attributes'>;

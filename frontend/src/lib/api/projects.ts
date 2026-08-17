@@ -11,25 +11,20 @@ export async function getProjects(): Promise<Project[]> {
     return (mockProjects as Project[]).sort((a, b) => a.sortOrder - b.sortOrder);
   }
 
-  try {
-    const response = await fetchAPI<StrapiProjectItem[]>('/api/projects', {
-      params: {
-        populate: '*',
-        'sort[0]': 'sortOrder:asc',
-      },
-      tags: ['projects'],
-      revalidate: 3600,
-    });
+  const response = await fetchAPI<StrapiProjectItem[]>('/api/projects', {
+    params: {
+      populate: '*',
+      'sort[0]': 'sortOrder:asc',
+    },
+    tags: ['projects'],
+    revalidate: 3600,
+  });
 
-    if (!response.data || !Array.isArray(response.data)) {
-      return (mockProjects as Project[]).sort((a, b) => a.sortOrder - b.sortOrder);
-    }
-
-    return response.data.map(normalizeProject).sort((a, b) => a.sortOrder - b.sortOrder);
-  } catch (error) {
-    console.error('[CMS getProjects failed, using fallback data]:', error);
-    return (mockProjects as Project[]).sort((a, b) => a.sortOrder - b.sortOrder);
+  if (!response.data || !Array.isArray(response.data)) {
+    return [];
   }
+
+  return response.data.map(normalizeProject).sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
 export async function getFeaturedProjects(): Promise<Project[]> {
@@ -42,27 +37,20 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
     return (mockProjects as Project[]).find((p) => p.slug === slug) || null;
   }
 
-  try {
-    const response = await fetchAPI<StrapiProjectItem[]>('/api/projects', {
-      params: {
-        'filters[slug][$eq]': slug,
-        populate: '*',
-      },
-      tags: ['projects', `project-${slug}`],
-      revalidate: 3600,
-    });
+  const response = await fetchAPI<StrapiProjectItem[]>('/api/projects', {
+    params: {
+      'filters[slug][$eq]': slug,
+      populate: '*',
+    },
+    tags: ['projects', `project-${slug}`],
+    revalidate: 3600,
+  });
 
-    if (response.data && response.data.length > 0) {
-      return normalizeProject(response.data[0]);
-    }
-
-    // Fallback search
-    const all = await getProjects();
-    return all.find((p) => p.slug === slug) || null;
-  } catch (error) {
-    console.error(`[CMS getProjectBySlug failed for ${slug}]:`, error);
-    return (mockProjects as Project[]).find((p) => p.slug === slug) || null;
+  if (response.data && response.data.length > 0) {
+    return normalizeProject(response.data[0]);
   }
+
+  return null;
 }
 
 export async function getAdjacentProjects(
