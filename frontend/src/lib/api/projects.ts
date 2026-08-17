@@ -1,9 +1,35 @@
 import { Project } from '@/types';
-import projectsData from '@/data/projects.json';
+import { StrapiProjectItem } from '@/types/strapi';
+import { fetchAPI } from './client';
+import { normalizeProject } from './normalizers';
+import mockProjects from '@/data/projects.json';
+
+const USE_MOCK = process.env.USE_MOCK_DATA === 'true';
 
 export async function getProjects(): Promise<Project[]> {
-  // Phase 1: local mock data. Phase 2: fetch(`${process.env.STRAPI_API_URL}/api/projects?populate=*`)
-  return (projectsData as Project[]).sort((a, b) => a.sortOrder - b.sortOrder);
+  if (USE_MOCK) {
+    return (mockProjects as Project[]).sort((a, b) => a.sortOrder - b.sortOrder);
+  }
+
+  try {
+    const response = await fetchAPI<StrapiProjectItem[]>('/api/projects', {
+      params: {
+        populate: '*',
+        'sort[0]': 'sortOrder:asc',
+      },
+      tags: ['projects'],
+      revalidate: 3600,
+    });
+
+    if (!response.data || !Array.isArray(response.data)) {
+      return (mockProjects as Project[]).sort((a, b) => a.sortOrder - b.sortOrder);
+    }
+
+    return response.data.map(normalizeProject).sort((a, b) => a.sortOrder - b.sortOrder);
+  } catch (error) {
+    console.error('[CMS getProjects failed, using fallback data]:', error);
+    return (mockProjects as Project[]).sort((a, b) => a.sortOrder - b.sortOrder);
+  }
 }
 
 export async function getFeaturedProjects(): Promise<Project[]> {
@@ -12,11 +38,36 @@ export async function getFeaturedProjects(): Promise<Project[]> {
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  const projects = await getProjects();
-  return projects.find((p) => p.slug === slug) || null;
+  if (USE_MOCK) {
+    return (mockProjects as Project[]).find((p) => p.slug === slug) || null;
+  }
+
+  try {
+    const response = await fetchAPI<StrapiProjectItem[]>('/api/projects', {
+      params: {
+        'filters[slug][$eq]': slug,
+        populate: '*',
+      },
+      tags: ['projects', `project-${slug}`],
+      revalidate: 3600,
+    });
+
+    if (response.data && response.data.length > 0) {
+      return normalizeProject(response.data[0]);
+    }
+
+    // Fallback search
+    const all = await getProjects();
+    return all.find((p) => p.slug === slug) || null;
+  } catch (error) {
+    console.error(`[CMS getProjectBySlug failed for ${slug}]:`, error);
+    return (mockProjects as Project[]).find((p) => p.slug === slug) || null;
+  }
 }
 
-export async function getAdjacentProjects(currentSlug: string): Promise<{ prev: Project | null; next: Project | null }> {
+export async function getAdjacentProjects(
+  currentSlug: string
+): Promise<{ prev: Project | null; next: Project | null }> {
   const projects = await getProjects();
   const currentIndex = projects.findIndex((p) => p.slug === currentSlug);
 

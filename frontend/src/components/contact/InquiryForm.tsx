@@ -30,11 +30,7 @@ export function InquiryForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.honeypot) {
-      setStatus('success');
-      return;
-    }
-
+    // Client-side quick check
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       setStatus('error');
       setErrorMessage('Please complete all required fields (Name, Email, and Message).');
@@ -52,11 +48,28 @@ export function InquiryForm() {
     setErrorMessage('');
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      const res = await fetch('/api/inquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data.error || 'An error occurred during submission. Please try again.');
+      }
+
       setStatus('success');
-    } catch {
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : 'An error occurred during submission. Please try again or reach out directly.';
       setStatus('error');
-      setErrorMessage('An error occurred during submission. Please try again or reach out directly.');
+      setErrorMessage(message);
     }
   };
 
@@ -117,7 +130,7 @@ export function InquiryForm() {
               </motion.div>
             )}
 
-            {/* Honeypot field */}
+            {/* Honeypot field (hidden from real users, caught if filled by bots) */}
             <div className="hidden" aria-hidden="true">
               <label htmlFor="hp_field">Do not fill this</label>
               <input

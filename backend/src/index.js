@@ -16,7 +16,7 @@ module.exports = {
    */
   async bootstrap({ strapi }) {
     try {
-      // 1. Setup Public Role Permissions for read-only content
+      // 1. Setup Public Role Permissions for read-only content and secure inquiry creation
       const publicRole = await strapi
         .query('plugin::users-permissions.role')
         .findOne({ where: { type: 'public' } });
@@ -31,6 +31,7 @@ module.exports = {
           'api::service.service.findOne',
           'api::faq.faq.find',
           'api::faq.faq.findOne',
+          'api::inquiry.inquiry.create', // Only CREATE allowed; find/findOne remain 403
         ];
 
         for (const action of publicPermissions) {
