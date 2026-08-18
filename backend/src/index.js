@@ -1,7 +1,7 @@
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
 
 module.exports = {
   /**
@@ -16,19 +16,21 @@ module.exports = {
    */
   async bootstrap({ strapi }) {
     try {
-      // 1. Setup Public Role Permissions for read-only content and secure inquiry creation
+      strapi.log.info('Running Inovador CMS bootstrap & permissions check...');
+
+      // 1. Grant public READ permissions for all content endpoints
       const publicRole = await strapi
         .query('plugin::users-permissions.role')
         .findOne({ where: { type: 'public' } });
 
       if (publicRole) {
-        const publicPermissions = [
+        const publicActions = [
           'api::project.project.find',
           'api::project.project.findOne',
-          'api::testimonial.testimonial.find',
-          'api::testimonial.testimonial.findOne',
           'api::service.service.find',
           'api::service.service.findOne',
+          'api::testimonial.testimonial.find',
+          'api::testimonial.testimonial.findOne',
           'api::faq.faq.find',
           'api::faq.faq.findOne',
           'api::hero-slide.hero-slide.find',
@@ -38,11 +40,10 @@ module.exports = {
           'api::award-press.award-press.find',
           'api::award-press.award-press.findOne',
           'api::studio-about.studio-about.find',
-          'api::studio-about.studio-about.findOne',
-          'api::inquiry.inquiry.create', // Only CREATE allowed; find/findOne remain 403
+          'api::inquiry.inquiry.create',
         ];
 
-        for (const action of publicPermissions) {
+        for (const action of publicActions) {
           const existing = await strapi
             .query('plugin::users-permissions.permission')
             .findOne({
@@ -66,14 +67,16 @@ module.exports = {
 
       const frontendDataDir = path.resolve(__dirname, '../../frontend/src/data');
 
-      // 2. Seed Projects
-      const projectCount = await strapi.db.query('api::project.project').count();
-      if (projectCount === 0) {
+      // 2. Seed / Repair Projects (Using Strapi v5 Document Service)
+      const projectDrafts = await strapi.documents('api::project.project').findMany({ status: 'draft' });
+      if (projectDrafts.length === 0) {
         const projectsFile = path.join(frontendDataDir, 'projects.json');
         if (fs.existsSync(projectsFile)) {
           const projectsData = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
+          // Clear any obsolete raw unindexed rows
+          await strapi.db.query('api::project.project').deleteMany({});
           for (const item of projectsData) {
-            await strapi.db.query('api::project.project').create({
+            await strapi.documents('api::project.project').create({
               data: {
                 title: item.title,
                 slug: item.slug,
@@ -82,46 +85,54 @@ module.exports = {
                 year: item.year,
                 shortDescription: item.shortDescription,
                 description: item.fullDescription,
+                coverImage: item.coverImage,
+                gallery: item.gallery,
+                beforeImage: item.beforeImage,
+                afterImage: item.afterImage,
                 featured: item.featured ?? false,
                 sortOrder: item.sortOrder ?? 0,
                 stats: item.stats ?? {},
-                publishedAt: new Date(),
               },
+              status: 'published',
             });
           }
-          strapi.log.info(`Seeded ${projectsData.length} projects.`);
+          strapi.log.info(`Seeded ${projectsData.length} projects via Document Service.`);
         }
       }
 
-      // 3. Seed Testimonials
-      const testimonialCount = await strapi.db.query('api::testimonial.testimonial').count();
-      if (testimonialCount === 0) {
+      // 3. Seed / Repair Testimonials (Using Strapi v5 Document Service)
+      const testimonialDrafts = await strapi.documents('api::testimonial.testimonial').findMany({ status: 'draft' });
+      if (testimonialDrafts.length === 0) {
         const testimonialsFile = path.join(frontendDataDir, 'testimonials.json');
         if (fs.existsSync(testimonialsFile)) {
           const testimonialsData = JSON.parse(fs.readFileSync(testimonialsFile, 'utf8'));
+          await strapi.db.query('api::testimonial.testimonial').deleteMany({});
           for (const item of testimonialsData) {
-            await strapi.db.query('api::testimonial.testimonial').create({
+            await strapi.documents('api::testimonial.testimonial').create({
               data: {
                 clientName: item.clientName,
                 quote: item.quote,
                 roleOrLocation: item.roleOrLocation,
+                projectReference: item.projectReference,
+                photo: item.avatar,
                 sortOrder: item.sortOrder ?? 0,
-                publishedAt: new Date(),
               },
+              status: 'published',
             });
           }
-          strapi.log.info(`Seeded ${testimonialsData.length} testimonials.`);
+          strapi.log.info(`Seeded ${testimonialsData.length} testimonials via Document Service.`);
         }
       }
 
-      // 4. Seed Services
-      const serviceCount = await strapi.db.query('api::service.service').count();
-      if (serviceCount === 0) {
+      // 4. Seed / Repair Services (Using Strapi v5 Document Service)
+      const serviceDrafts = await strapi.documents('api::service.service').findMany({ status: 'draft' });
+      if (serviceDrafts.length === 0) {
         const servicesFile = path.join(frontendDataDir, 'services.json');
         if (fs.existsSync(servicesFile)) {
           const servicesData = JSON.parse(fs.readFileSync(servicesFile, 'utf8'));
+          await strapi.db.query('api::service.service').deleteMany({});
           for (const item of servicesData) {
-            await strapi.db.query('api::service.service').create({
+            await strapi.documents('api::service.service').create({
               data: {
                 name: item.name,
                 slug: item.slug,
@@ -129,45 +140,46 @@ module.exports = {
                 shortDescription: item.shortDescription,
                 deliverables: item.deliverables,
                 sortOrder: item.sortOrder ?? 0,
-                publishedAt: new Date(),
               },
+              status: 'published',
             });
           }
-          strapi.log.info(`Seeded ${servicesData.length} services.`);
+          strapi.log.info(`Seeded ${servicesData.length} services via Document Service.`);
         }
       }
 
-      // 5. Seed FAQs
-      const faqCount = await strapi.db.query('api::faq.faq').count();
-      if (faqCount === 0) {
+      // 5. Seed / Repair FAQs (Using Strapi v5 Document Service)
+      const faqDrafts = await strapi.documents('api::faq.faq').findMany({ status: 'draft' });
+      if (faqDrafts.length === 0) {
         const faqFile = path.join(frontendDataDir, 'faq.json');
         if (fs.existsSync(faqFile)) {
           const faqData = JSON.parse(fs.readFileSync(faqFile, 'utf8'));
+          await strapi.db.query('api::faq.faq').deleteMany({});
           for (const item of faqData) {
-            await strapi.db.query('api::faq.faq').create({
+            await strapi.documents('api::faq.faq').create({
               data: {
                 question: item.question,
                 answer: item.answer,
                 category: item.category ?? 'General',
                 sortOrder: item.sortOrder ?? 0,
-                publishedAt: new Date(),
               },
+              status: 'published',
             });
           }
-          strapi.log.info(`Seeded ${faqData.length} FAQs.`);
+          strapi.log.info(`Seeded ${faqData.length} FAQs via Document Service.`);
         }
       }
 
-      // 6. Seed Hero Slides
-      const heroSlideCount = await strapi.db.query('api::hero-slide.hero-slide').count();
-      if (heroSlideCount === 0) {
+      // 6. Seed / Repair Hero Slides (Using Strapi v5 Document Service)
+      const heroSlideDrafts = await strapi.documents('api::hero-slide.hero-slide').findMany({ status: 'draft' });
+      if (heroSlideDrafts.length === 0) {
         const heroSlides = [
           {
             title: 'Architecture in Dialogue with Landscape & Sea',
             eyebrow: 'Private Coastal Residence',
             location: 'Anjuna, Goa',
             projectSlug: 'the-raw-stone-pavilion',
-            imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000&auto=format&fit=crop',
+            image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000&auto=format&fit=crop',
             sortOrder: 1,
             active: true,
           },
@@ -176,40 +188,40 @@ module.exports = {
             eyebrow: 'Heritage Interior Architecture',
             location: 'Marine Drive, Mumbai',
             projectSlug: 'apartment-702-marine-drive',
-            imageUrl: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=2000&auto=format&fit=crop',
+            image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=2000&auto=format&fit=crop',
             sortOrder: 2,
             active: true,
           },
           {
-            title: 'Monolithic Concrete & Shaded Spatial Flow',
+            title: 'Monolithic Courtyard Estate',
             eyebrow: 'Monolithic Courtyard Estate',
             location: 'Awas, Alibaug',
             projectSlug: 'courtyard-house-of-light',
-            imageUrl: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2000&auto=format&fit=crop',
+            image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2000&auto=format&fit=crop',
             sortOrder: 3,
             active: true,
           },
         ];
+        await strapi.db.query('api::hero-slide.hero-slide').deleteMany({});
         for (const slide of heroSlides) {
-          await strapi.db.query('api::hero-slide.hero-slide').create({
-            data: {
-              ...slide,
-              publishedAt: new Date(),
-            },
+          await strapi.documents('api::hero-slide.hero-slide').create({
+            data: slide,
+            status: 'published',
           });
         }
-        strapi.log.info(`Seeded ${heroSlides.length} hero slides.`);
+        strapi.log.info(`Seeded ${heroSlides.length} hero slides via Document Service.`);
       }
 
-      // 7. Seed Process Steps
-      const processCount = await strapi.db.query('api::process-step.process-step').count();
-      if (processCount === 0) {
+      // 7. Seed / Repair Process Steps (Using Strapi v5 Document Service)
+      const processDrafts = await strapi.documents('api::process-step.process-step').findMany({ status: 'draft' });
+      if (processDrafts.length === 0) {
         const processFile = path.join(frontendDataDir, 'process.json');
         if (fs.existsSync(processFile)) {
           const processData = JSON.parse(fs.readFileSync(processFile, 'utf8'));
+          await strapi.db.query('api::process-step.process-step').deleteMany({});
           for (let i = 0; i < processData.length; i++) {
             const step = processData[i];
-            await strapi.db.query('api::process-step.process-step').create({
+            await strapi.documents('api::process-step.process-step').create({
               data: {
                 stepNumber: step.number,
                 title: step.title,
@@ -217,23 +229,24 @@ module.exports = {
                 description: step.description,
                 sortOrder: i + 1,
                 active: true,
-                publishedAt: new Date(),
               },
+              status: 'published',
             });
           }
-          strapi.log.info(`Seeded ${processData.length} process steps.`);
+          strapi.log.info(`Seeded ${processData.length} process steps via Document Service.`);
         }
       }
 
-      // 8. Seed Awards & Press
-      const awardCount = await strapi.db.query('api::award-press.award-press').count();
-      if (awardCount === 0) {
+      // 8. Seed / Repair Awards & Press (Using Strapi v5 Document Service)
+      const awardDrafts = await strapi.documents('api::award-press.award-press').findMany({ status: 'draft' });
+      if (awardDrafts.length === 0) {
         const awardsFile = path.join(frontendDataDir, 'awards.json');
         if (fs.existsSync(awardsFile)) {
           const awardsData = JSON.parse(fs.readFileSync(awardsFile, 'utf8'));
+          await strapi.db.query('api::award-press.award-press').deleteMany({});
           for (let i = 0; i < awardsData.length; i++) {
             const award = awardsData[i];
-            await strapi.db.query('api::award-press.award-press').create({
+            await strapi.documents('api::award-press.award-press').create({
               data: {
                 title: award.title,
                 publication: award.publication,
@@ -241,18 +254,19 @@ module.exports = {
                 badgeText: award.badgeText,
                 sortOrder: i + 1,
                 active: true,
-                publishedAt: new Date(),
               },
+              status: 'published',
             });
           }
-          strapi.log.info(`Seeded ${awardsData.length} awards/press items.`);
+          strapi.log.info(`Seeded ${awardsData.length} awards/press items via Document Service.`);
         }
       }
 
-      // 9. Seed Studio / About Single Type Record
-      const studioAboutCount = await strapi.db.query('api::studio-about.studio-about').count();
-      if (studioAboutCount === 0) {
-        await strapi.db.query('api::studio-about.studio-about').create({
+      // 9. Seed / Repair Studio / About Single Type (Using Strapi v5 Document Service)
+      const studioAboutDrafts = await strapi.documents('api::studio-about.studio-about').findMany({ status: 'draft' });
+      if (studioAboutDrafts.length === 0) {
+        await strapi.db.query('api::studio-about.studio-about').deleteMany({});
+        await strapi.documents('api::studio-about.studio-about').create({
           data: {
             studioName: 'Inovador Design Studio',
             tagline: 'Architecture · Interiors · Landscapes · Spatial Identities',
@@ -316,32 +330,15 @@ module.exports = {
             footerDescription: 'We lead residential architecture, private estates, and luxury interior transformations across India and select international locales.',
             ctaText: 'Start a Commission',
             ctaLink: '/#contact',
-            publishedAt: new Date(),
           },
+          status: 'published',
         });
-        strapi.log.info('Seeded Studio / About single-type record.');
+        strapi.log.info('Seeded Studio / About single-type record via Document Service.');
       }
 
-      // 10. Seed Initial Test Inquiry (Private, internal verification)
-      const inquiryCount = await strapi.db.query('api::inquiry.inquiry').count();
-      if (inquiryCount === 0) {
-        await strapi.db.query('api::inquiry.inquiry').create({
-          data: {
-            name: 'Dr. Siddharth & Radhika Singhania',
-            email: 'patron@inovador-brief.example',
-            phone: '+91 98200 12345',
-            projectType: 'Architecture & Residential Villa',
-            timeline: 'Within 6 Months',
-            message: 'Looking to commission a 5,000 sq.ft cliffside residence in North Goa focusing on raw laterite and passive ventilation.',
-            status: 'new',
-          },
-        });
-        strapi.log.info('Seeded test inquiry brief for Studio Editor verification.');
-      }
-
-      strapi.log.info('Initial Strapi database seeding and schema configuration verified.');
-    } catch (err) {
-      strapi.log.error('Bootstrap initialization error: ', err);
+      strapi.log.info('Inovador CMS Document Service initialization complete.');
+    } catch (error) {
+      strapi.log.error('Error during Strapi bootstrap:', error);
     }
   },
 };
