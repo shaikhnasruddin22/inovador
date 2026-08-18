@@ -1,0 +1,32 @@
+{
+  "kind": "singleType",
+  "collectionName": "contact_pages",
+  "info": {
+    "singularName": "contact-page",
+    "pluralName": "contact-pages",
+    "displayName": "Contact Page",
+    "description": "Page-level copy, office locations, and protocol for the /contact page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "heading": { "type": "string", "default": "Initiate a Spatial Commission" },
+    "introduction": { "type": "text", "default": "We welcome conversations regarding private residential commissions, architectural master planning, and transformative interior projects across India and abroad." },
+    "email": { "type": "string", "default": "commissions@inovadordesign.com" },
+    "phone": { "type": "string", "default": "+91 22 6984 3200" },
+    "officeDetails": { "type": "text", "default": "Mumbai Studio: The Mill District, Lower Parel | Goa Studio: Assagao Heritage Enclave" },
+    "officeHours": { "type": "string", "default": "Monday – Friday: 09:30 – 18:30 IST (By Prior Appointment Only)" },
+    "advisoryProtocol": { "type": "text", "default": "Every commission begins with a comprehensive site appraisal and architectural brief alignment session with our principal partners." },
+    "ctaText": { "type": "string", "default": "Schedule Advisory Consultation" },
+    "seoTitle": { "type": "string", "default": "Contact & Commission Inquiries | Inovador Design Studio" },
+    "seoDescription": { "type": "text", "default": "Initiate a conversation with our architectural and spatial design studio in Mumbai and Goa." },
+    "seoImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

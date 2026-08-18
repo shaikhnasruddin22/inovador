@@ -4,7 +4,7 @@ import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CustomCursor } from '@/components/ui/CustomCursor';
-import { getStudioAbout } from '@/lib/api';
+import { getStudioAbout, getNavigation, getSiteSettings } from '@/lib/api';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -68,33 +68,36 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  let aboutData = null;
-  try {
-    aboutData = await getStudioAbout();
-  } catch (error) {
-    console.error('[Layout getStudioAbout warning]:', error);
-  }
+  const [aboutData, navItems, siteSettings] = await Promise.all([
+    getStudioAbout().catch(() => null),
+    getNavigation().catch(() => []),
+    getSiteSettings().catch(() => null),
+  ]);
+
+  const studioName = siteSettings?.studioName || aboutData?.studioName || 'Inovador Design Studio';
+  const phone = siteSettings?.phone || aboutData?.phone || '+91 22 6984 3200';
+  const address = siteSettings?.address || aboutData?.mumbaiAddress || 'Studio 04, The Mill District, Lower Parel, Mumbai, Maharashtra 400013';
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
-    name: aboutData?.studioName || 'Inovador Design Studio',
+    name: studioName,
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600&auto=format&fit=crop',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-    telephone: aboutData?.phone || '+91-98765-43210',
+    telephone: phone,
     priceRange: '$$$$',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: aboutData?.mumbaiAddress || 'Studio Inovador, Design District',
+      streetAddress: address,
       addressLocality: 'Mumbai',
       addressRegion: 'Maharashtra',
-      postalCode: '400001',
+      postalCode: '400013',
       addressCountry: 'IN',
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 18.922,
-      longitude: 72.8347,
+      latitude: 18.9986,
+      longitude: 72.8258,
     },
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
@@ -114,11 +117,15 @@ export default async function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased selection:bg-[var(--accent-terracotta)] selection:text-white">
         <CustomCursor />
-        <Header />
+        <Header navItems={navItems} siteSettings={siteSettings || undefined} />
         <main className="flex-grow pt-[80px] lg:pt-[90px]">
           {children}
         </main>
-        <Footer aboutData={aboutData || undefined} />
+        <Footer
+          aboutData={aboutData || undefined}
+          siteSettings={siteSettings || undefined}
+          navItems={navItems}
+        />
       </body>
     </html>
   );

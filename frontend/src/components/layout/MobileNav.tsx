@@ -4,14 +4,17 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowRight } from 'lucide-react';
+import { NavigationItem, SiteSettings } from '@/types';
 import { NAV_LINKS, STUDIO_INFO } from '@/lib/constants';
 
 interface MobileNavProps {
   isOpen: boolean;
   onClose: () => void;
+  navItems?: NavigationItem[];
+  siteSettings?: SiteSettings;
 }
 
-export function MobileNav({ isOpen, onClose }: MobileNavProps) {
+export function MobileNav({ isOpen, onClose, navItems = [], siteSettings }: MobileNavProps) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -22,6 +25,25 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
+
+  const activeNavLinks =
+    navItems.length > 0
+      ? navItems
+          .filter((item) => item.visible !== false)
+          .sort((a, b) => a.sortOrder - b.sortOrder)
+          .map((item) => ({
+            label: item.label,
+            href: item.url,
+            openInNewTab: item.openInNewTab,
+          }))
+      : NAV_LINKS.map((l) => ({ label: l.label, href: l.href, openInNewTab: false }));
+
+  const studioName = siteSettings?.studioName || 'INOVADOR';
+  const tagline = siteSettings?.tagline || STUDIO_INFO.tagline;
+  const socials =
+    siteSettings?.socialLinks && siteSettings.socialLinks.length > 0
+      ? siteSettings.socialLinks
+      : STUDIO_INFO.socials.map((s) => ({ name: s.label, url: s.href }));
 
   return (
     <AnimatePresence>
@@ -35,8 +57,8 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         >
           {/* Top Bar */}
           <div className="flex items-center justify-between border-b border-[#2A2A2A] pb-6">
-            <Link href="/" onClick={onClose} className="font-serif text-xl tracking-tight">
-              INOVADOR
+            <Link href="/" onClick={onClose} className="font-serif text-xl tracking-tight uppercase">
+              {studioName.replace(/ Design Studio/i, '').replace(/ Studio/i, '')}
             </Link>
             <button
               onClick={onClose}
@@ -49,15 +71,17 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 
           {/* Navigation Links */}
           <nav className="my-auto py-8 flex flex-col gap-5">
-            {NAV_LINKS.map((link, idx) => (
+            {activeNavLinks.map((link, idx) => (
               <motion.div
-                key={link.href}
+                key={`${link.href}-${idx}`}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.05 * idx, duration: 0.3 }}
               >
                 <Link
                   href={link.href}
+                  target={link.openInNewTab ? '_blank' : undefined}
+                  rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
                   onClick={onClose}
                   className="font-serif text-3xl sm:text-4xl text-[#F8F5F0] hover:text-[var(--accent-terracotta)] transition-colors flex items-center justify-between group"
                 >
@@ -71,19 +95,19 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
           {/* Bottom Studio Info */}
           <div className="border-t border-[#2A2A2A] pt-6 flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#958F86]">
             <div>
-              <p className="font-medium text-white mb-1">Mumbai & Goa Studio</p>
-              <p>{STUDIO_INFO.tagline}</p>
+              <p className="font-medium text-white mb-1">Architecture & Spatial Practice</p>
+              <p>{tagline}</p>
             </div>
             <div className="flex gap-4">
-              {STUDIO_INFO.socials.map((s) => (
+              {socials.map((s) => (
                 <a
-                  key={s.label}
-                  href={s.href}
+                  key={s.name}
+                  href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors"
                 >
-                  {s.label}
+                  {s.name}
                 </a>
               ))}
             </div>

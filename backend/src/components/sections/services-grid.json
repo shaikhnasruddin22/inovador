@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_sections_services_grids",
+  "info": {
+    "displayName": "Services Grid",
+    "icon": "bulletList",
+    "description": "Grid referencing studio services collection"
+  },
+  "options": {},
+  "attributes": {
+    "heading": { "type": "string", "default": "Disciplines & Practices" },
+    "subtitle": { "type": "text" }
+  }
+}

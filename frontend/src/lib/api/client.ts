@@ -34,7 +34,7 @@ export function getMediaUrl(media?: StrapiMedia | string | null): string | undef
 }
 
 export function getMediaGalleryUrls(
-  gallery?: StrapiMedia[] | { data: StrapiMedia[] } | string[] | null
+  gallery?: (StrapiMedia | string)[] | { data: StrapiMedia[] } | null
 ): string[] {
   if (!gallery) return [];
   if (Array.isArray(gallery)) {
@@ -50,8 +50,8 @@ export function getMediaGalleryUrls(
   return [];
 }
 
-interface FetchAPIOptions extends RequestInit {
-  params?: Record<string, string | number | boolean>;
+export interface FetchAPIOptions extends RequestInit {
+  params?: Record<string, unknown>;
   tags?: string[];
   revalidate?: number | false;
 }
@@ -66,7 +66,17 @@ export async function fetchAPI<T = unknown>(
   if (params) {
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, val]) => {
-      searchParams.append(key, String(val));
+      if (Array.isArray(val)) {
+        val.forEach((item, idx) => {
+          searchParams.append(`${key}[${idx}]`, String(item));
+        });
+      } else if (typeof val === 'object' && val !== null) {
+        Object.entries(val).forEach(([subKey, subVal]) => {
+          searchParams.append(`${key}[${subKey}]`, String(subVal));
+        });
+      } else if (val !== undefined && val !== null) {
+        searchParams.append(key, String(val));
+      }
     });
     const queryString = searchParams.toString();
     if (queryString) {

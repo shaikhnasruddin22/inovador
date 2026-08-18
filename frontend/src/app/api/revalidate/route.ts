@@ -26,8 +26,8 @@ export async function POST(req: NextRequest) {
       case 'project':
         revalidateTag('projects', 'default');
         revalidatePath('/', 'page');
-        revalidatePath('/#projects', 'page');
-        revalidated.push('projects-tag', '/');
+        revalidatePath('/projects', 'page');
+        revalidated.push('projects-tag', '/', '/projects');
         if (slug) {
           revalidateTag(`project-${slug}`, 'default');
           revalidatePath(`/projects/${slug}`, 'page');
@@ -38,7 +38,8 @@ export async function POST(req: NextRequest) {
       case 'service':
         revalidateTag('services', 'default');
         revalidatePath('/', 'page');
-        revalidated.push('services-tag', '/');
+        revalidatePath('/services', 'page');
+        revalidated.push('services-tag', '/', '/services');
         break;
 
       case 'testimonial':
@@ -82,9 +83,72 @@ export async function POST(req: NextRequest) {
         revalidated.push('studio-about-tag', '/', '/about');
         break;
 
-      default:
+      case 'navigation-item':
+      case 'navigationitem':
+      case 'navigation':
+        revalidateTag('navigation', 'default');
+        revalidatePath('/', 'layout');
+        revalidated.push('navigation-tag', 'layout');
+        break;
+
+      case 'presence':
+        revalidateTag('presence', 'default');
+        revalidatePath('/presence', 'page');
+        revalidated.push('presence-tag', '/presence');
+        if (slug) {
+          revalidateTag(`presence-${slug}`, 'default');
+          revalidatePath(`/presence/${slug}`, 'page');
+          revalidated.push(`presence-${slug}`, `/presence/${slug}`);
+        }
+        break;
+
+      case 'page':
+        revalidateTag('pages', 'default');
+        revalidated.push('pages-tag');
+        if (slug) {
+          revalidateTag(`page-${slug}`, 'default');
+          revalidatePath(`/${slug}`, 'page');
+          revalidated.push(`page-${slug}`, `/${slug}`);
+        }
+        break;
+
+      case 'site-setting':
+      case 'sitesetting':
+        revalidateTag('site-settings', 'default');
+        revalidatePath('/', 'layout');
+        revalidated.push('site-settings-tag', 'layout');
+        break;
+
+      case 'home-page':
+      case 'homepage':
+        revalidateTag('home-page', 'default');
         revalidatePath('/', 'page');
-        revalidatePath('/about', 'page');
+        revalidated.push('home-page-tag', '/');
+        break;
+
+      case 'services-page':
+      case 'servicespage':
+        revalidateTag('services-page', 'default');
+        revalidatePath('/services', 'page');
+        revalidated.push('services-page-tag', '/services');
+        break;
+
+      case 'projects-page':
+      case 'projectspage':
+        revalidateTag('projects-page', 'default');
+        revalidatePath('/projects', 'page');
+        revalidated.push('projects-page-tag', '/projects');
+        break;
+
+      case 'contact-page':
+      case 'contactpage':
+        revalidateTag('contact-page', 'default');
+        revalidatePath('/contact', 'page');
+        revalidated.push('contact-page-tag', '/contact');
+        break;
+
+      default:
+        revalidatePath('/', 'layout');
         revalidateTag('projects', 'default');
         revalidateTag('services', 'default');
         revalidateTag('testimonials', 'default');
@@ -93,7 +157,15 @@ export async function POST(req: NextRequest) {
         revalidateTag('process-steps', 'default');
         revalidateTag('awards-press', 'default');
         revalidateTag('studio-about', 'default');
-        revalidated.push('all-tags', '/', '/about');
+        revalidateTag('navigation', 'default');
+        revalidateTag('presence', 'default');
+        revalidateTag('pages', 'default');
+        revalidateTag('site-settings', 'default');
+        revalidateTag('home-page', 'default');
+        revalidateTag('services-page', 'default');
+        revalidateTag('projects-page', 'default');
+        revalidateTag('contact-page', 'default');
+        revalidated.push('all-tags', 'layout');
         break;
     }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { HeroSlider } from '@/components/hero/HeroSlider';
 import { FeaturedProjects } from '@/components/projects/FeaturedProjects';
 import { AboutTeaser } from '@/components/about/AboutTeaser';
@@ -18,10 +19,27 @@ import {
   getServices,
   getHeroSlides,
   getStudioAbout,
+  getHomePage,
 } from '@/lib/api';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const homeData = await getHomePage().catch(() => null);
+  if (!homeData) return {};
+
+  return {
+    title: homeData.seoTitle || 'Inovador Design Studio | Luxury Architecture & Interior Practice',
+    description: homeData.seoDescription,
+    openGraph: {
+      title: homeData.seoTitle,
+      description: homeData.seoDescription,
+      images: homeData.seoImage ? [{ url: homeData.seoImage }] : undefined,
+    },
+  };
+}
 
 export default async function HomePage() {
   const [
+    homeConfig,
     heroSlides,
     projects,
     studioAbout,
@@ -31,6 +49,20 @@ export default async function HomePage() {
     awards,
     faqs,
   ] = await Promise.all([
+    getHomePage().catch(() => ({
+      showHero: true,
+      showProjects: true,
+      showAboutTeaser: true,
+      showProcess: true,
+      showServices: true,
+      showBeforeAfter: true,
+      showTestimonials: true,
+      showAwards: true,
+      showFaq: true,
+      showInquiry: true,
+      seoTitle: '',
+      seoDescription: '',
+    })),
     getHeroSlides(),
     getProjects(),
     getStudioAbout(),
@@ -48,35 +80,35 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* 1. Hero Slider with Cinematic Motion */}
-      <HeroSlider slides={heroSlides} />
+      {/* 1. Hero Slider with Cinematic Motion (Image & Video) */}
+      {homeConfig.showHero !== false && <HeroSlider slides={heroSlides} />}
 
       {/* 2. Featured Projects with Layout Animations */}
-      <FeaturedProjects initialProjects={projects} />
+      {homeConfig.showProjects !== false && <FeaturedProjects initialProjects={projects} />}
 
       {/* 3. About Studio Teaser with Animated Counters */}
-      <AboutTeaser aboutData={studioAbout} />
+      {homeConfig.showAboutTeaser !== false && <AboutTeaser aboutData={studioAbout} />}
 
       {/* 4. Architectural Process with Progressive Reveal */}
-      <ProcessGrid steps={processSteps} />
+      {homeConfig.showProcess !== false && <ProcessGrid steps={processSteps} />}
 
       {/* 5. Services & Capabilities with Refined Hover */}
-      <ServicesGrid services={services} />
+      {homeConfig.showServices !== false && <ServicesGrid services={services} />}
 
       {/* 6. Before / After Renovation Widget with Drag Hint */}
-      <BeforeAfterSlider project={renovationProject} />
+      {homeConfig.showBeforeAfter !== false && <BeforeAfterSlider project={renovationProject} />}
 
       {/* 7. Testimonials Carousel with Sequential Stagger */}
-      <TestimonialsCarousel testimonials={testimonials} />
+      {homeConfig.showTestimonials !== false && <TestimonialsCarousel testimonials={testimonials} />}
 
       {/* 8. Recognition & Press Strip with Grayscale-to-Color */}
-      <PressAwardsStrip awards={awards} />
+      {homeConfig.showAwards !== false && <PressAwardsStrip awards={awards} />}
 
       {/* 9. FAQ Accordion with Smooth Morph */}
-      <FAQAccordion items={faqs} />
+      {homeConfig.showFaq !== false && <FAQAccordion items={faqs} />}
 
       {/* 10. Inquiry & Contact with Micro-Interactions */}
-      <InquirySection aboutData={studioAbout} />
+      {homeConfig.showInquiry !== false && <InquirySection aboutData={studioAbout} />}
     </>
   );
 }

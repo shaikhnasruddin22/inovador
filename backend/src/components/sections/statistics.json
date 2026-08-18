@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_sections_statistics",
+  "info": {
+    "displayName": "Statistics & Impact",
+    "icon": "chartBubble",
+    "description": "Animated counter metrics and studio statistics"
+  },
+  "options": {},
+  "attributes": {
+    "heading": { "type": "string" },
+    "stats": { "type": "json" }
+  }
+}

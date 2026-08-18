@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_sections_image_texts",
+  "info": {
+    "displayName": "Image + Text",
+    "icon": "layout",
+    "description": "Side-by-side architectural image and narrative block"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": { "type": "string" },
+    "heading": { "type": "string", "required": true },
+    "content": { "type": "text" },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "imagePosition": {
+      "type": "enumeration",
+      "enum": ["left", "right"],
+      "default": "left"
+    },
+    "ctaText": { "type": "string" },
+    "ctaUrl": { "type": "string" }
+  }
+}

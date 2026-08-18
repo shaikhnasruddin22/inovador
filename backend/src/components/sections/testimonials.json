@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_sections_testimonials",
+  "info": {
+    "displayName": "Testimonials Carousel",
+    "icon": "discuss",
+    "description": "Client feedback and architectural testimonials"
+  },
+  "options": {},
+  "attributes": {
+    "heading": { "type": "string", "default": "Client Endorsements" },
+    "subtitle": { "type": "text" }
+  }
+}

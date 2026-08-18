@@ -1,0 +1,74 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_settings",
+  "info": {
+    "singularName": "site-setting",
+    "pluralName": "site-settings",
+    "displayName": "Site Settings",
+    "description": "Global studio branding, contact info, footer, and default SEO"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "studioName": {
+      "type": "string",
+      "required": true,
+      "default": "Inovador Design Studio"
+    },
+    "tagline": {
+      "type": "string",
+      "default": "Architecture & Spatial Transformation"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "favicon": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "defaultEmail": {
+      "type": "string",
+      "default": "contact@inovadordesign.com"
+    },
+    "phone": {
+      "type": "string",
+      "default": "+91 22 6984 3200"
+    },
+    "address": {
+      "type": "text",
+      "default": "Studio 04, The Mill District, Lower Parel, Mumbai, Maharashtra 400013"
+    },
+    "socialLinks": {
+      "type": "json"
+    },
+    "copyrightText": {
+      "type": "string",
+      "default": "© 2026 Inovador Design Studio. All rights reserved."
+    },
+    "footerDescription": {
+      "type": "text",
+      "default": "We lead residential architecture, private estates, and luxury interior transformations across India and select international locales."
+    },
+    "defaultSeoTitle": {
+      "type": "string",
+      "default": "Inovador Design Studio | Architecture & Spatial Design"
+    },
+    "defaultSeoDescription": {
+      "type": "text",
+      "default": "A bespoke architecture and spatial design practice crafting monolithic residences, refined interiors, and branded spatial environments across Mumbai, Goa, Bengaluru, and New Delhi."
+    },
+    "defaultOgImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

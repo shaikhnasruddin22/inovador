@@ -4,14 +4,36 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Menu } from 'lucide-react';
+import { NavigationItem, SiteSettings } from '@/types';
 import { NAV_LINKS } from '@/lib/constants';
 import { Container } from './Container';
 import { MobileNav } from './MobileNav';
 import { EASE_EDITORIAL } from '@/lib/utils/animations';
 
-export function Header() {
+interface HeaderProps {
+  navItems?: NavigationItem[];
+  siteSettings?: SiteSettings;
+}
+
+export function Header({ navItems = [], siteSettings }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  // Convert CMS items or fallback to constant
+  const activeNavLinks =
+    navItems.length > 0
+      ? navItems
+          .filter((item) => item.visible !== false)
+          .sort((a, b) => a.sortOrder - b.sortOrder)
+          .map((item) => ({
+            label: item.label,
+            href: item.url,
+            openInNewTab: item.openInNewTab,
+          }))
+      : NAV_LINKS.map((l) => ({ label: l.label, href: l.href, openInNewTab: false }));
+
+  const studioName = siteSettings?.studioName || 'INOVADOR';
+  const tagline = siteSettings?.tagline || 'Design Studio';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,15 +64,15 @@ export function Header() {
           <Link
             href="/"
             className="group flex flex-col focus-visible:outline-none"
-            aria-label="Inovador Design Studio Homepage"
+            aria-label={`${studioName} Homepage`}
           >
             <motion.span
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.1, ease: EASE_EDITORIAL }}
-              className="font-serif text-2xl tracking-[-0.03em] font-light text-[var(--text-primary)] group-hover:text-[var(--accent-terracotta)] transition-colors"
+              className="font-serif text-2xl tracking-[-0.03em] font-light text-[var(--text-primary)] group-hover:text-[var(--accent-terracotta)] transition-colors uppercase"
             >
-              INOVADOR
+              {studioName.replace(/ Design Studio/i, '').replace(/ Studio/i, '')}
             </motion.span>
             <motion.span
               initial={{ opacity: 0 }}
@@ -58,15 +80,15 @@ export function Header() {
               transition={{ duration: 0.6, delay: 0.2, ease: EASE_EDITORIAL }}
               className="text-[10px] tracking-[0.2em] uppercase text-[var(--text-muted)] -mt-1 font-sans"
             >
-              Design Studio
+              {tagline.includes('Design') ? 'Design Studio' : tagline}
             </motion.span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8 text-[13px] tracking-[0.08em] uppercase font-sans font-medium text-[var(--text-secondary)]">
-            {NAV_LINKS.map((link, idx) => (
+            {activeNavLinks.map((link, idx) => (
               <motion.div
-                key={link.href}
+                key={`${link.href}-${idx}`}
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -77,6 +99,8 @@ export function Header() {
               >
                 <Link
                   href={link.href}
+                  target={link.openInNewTab ? '_blank' : undefined}
+                  rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
                   className="relative py-1 hover:text-[var(--text-primary)] transition-colors group block"
                 >
                   <span>{link.label}</span>
@@ -94,7 +118,7 @@ export function Header() {
             className="flex items-center gap-4"
           >
             <Link
-              href="/#contact"
+              href="/contact"
               className="hidden sm:inline-flex items-center justify-center px-5 py-2.5 text-xs uppercase tracking-[0.12em] font-medium border border-[var(--text-primary)] text-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] transition-all duration-300 active:scale-95"
             >
               Start an Inquiry
@@ -113,7 +137,12 @@ export function Header() {
       </motion.header>
 
       {/* Mobile Drawer */}
-      <MobileNav isOpen={isMobileNavOpen} onClose={() => setIsMobileNavOpen(false)} />
+      <MobileNav
+        isOpen={isMobileNavOpen}
+        onClose={() => setIsMobileNavOpen(false)}
+        navItems={navItems}
+        siteSettings={siteSettings}
+      />
     </>
   );
 }

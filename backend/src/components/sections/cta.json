@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_sections_ctas",
+  "info": {
+    "displayName": "Call To Action",
+    "icon": "handHeart",
+    "description": "Editorial call to action banner"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": { "type": "string" },
+    "heading": { "type": "string", "required": true },
+    "description": { "type": "text" },
+    "buttonText": { "type": "string", "default": "Initiate Studio Brief" },
+    "buttonUrl": { "type": "string", "default": "/contact" },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "style": {
+      "type": "enumeration",
+      "enum": ["dark", "terracotta", "light", "minimal"],
+      "default": "dark"
+    }
+  }
+}

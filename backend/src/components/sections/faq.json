@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_sections_faqs",
+  "info": {
+    "displayName": "FAQ Accordion",
+    "icon": "question",
+    "description": "Frequently asked questions accordion"
+  },
+  "options": {},
+  "attributes": {
+    "heading": { "type": "string", "default": "Frequently Inquired" },
+    "subtitle": { "type": "text" },
+    "category": { "type": "string" }
+  }
+}

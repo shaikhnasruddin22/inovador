@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_sections_rich_texts",
+  "info": {
+    "displayName": "Rich Text",
+    "icon": "feather",
+    "description": "Editorial rich text narrative section"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": { "type": "string" },
+    "heading": { "type": "string" },
+    "content": { "type": "richtext" },
+    "alignment": {
+      "type": "enumeration",
+      "enum": ["left", "center", "right"],
+      "default": "left"
+    },
+    "width": {
+      "type": "enumeration",
+      "enum": ["narrow", "medium", "wide", "full"],
+      "default": "medium"
+    }
+  }
+}

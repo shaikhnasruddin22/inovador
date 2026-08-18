@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_sections_awards",
+  "info": {
+    "displayName": "Awards & Press Strip",
+    "icon": "crown",
+    "description": "Studio honors and editorial press features"
+  },
+  "options": {},
+  "attributes": {
+    "heading": { "type": "string", "default": "Distinctions & Editorial" },
+    "subtitle": { "type": "text" }
+  }
+}

@@ -40,6 +40,17 @@ module.exports = {
           'api::award-press.award-press.find',
           'api::award-press.award-press.findOne',
           'api::studio-about.studio-about.find',
+          'api::navigation-item.navigation-item.find',
+          'api::navigation-item.navigation-item.findOne',
+          'api::presence.presence.find',
+          'api::presence.presence.findOne',
+          'api::page.page.find',
+          'api::page.page.findOne',
+          'api::site-setting.site-setting.find',
+          'api::home-page.home-page.find',
+          'api::services-page.services-page.find',
+          'api::projects-page.projects-page.find',
+          'api::contact-page.contact-page.find',
           'api::inquiry.inquiry.create',
         ];
 

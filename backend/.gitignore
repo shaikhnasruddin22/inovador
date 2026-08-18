@@ -3,7 +3,10 @@ node_modules/
 
 # Environment files
 .env
-.env*.local
+.env.*
+.env.local
+.env.production
+.env.production.local
 !.env.example
 
 # Strapi temporary files & cache

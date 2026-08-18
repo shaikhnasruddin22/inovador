@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_sections_inquiry_forms",
+  "info": {
+    "displayName": "Inquiry Form Section",
+    "icon": "mail",
+    "description": "Integrated studio commission inquiry section"
+  },
+  "options": {},
+  "attributes": {
+    "heading": { "type": "string", "default": "Commission an Inquiry" },
+    "subtitle": { "type": "text", "default": "Tell us about your spatial aspirations, site coordinates, and timeline." }
+  }
+}

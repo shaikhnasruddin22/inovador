@@ -1,0 +1,76 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pages",
+  "info": {
+    "singularName": "page",
+    "pluralName": "pages",
+    "displayName": "Page",
+    "description": "Dynamic CMS editorial pages with dynamic zone sections"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true,
+      "unique": true
+    },
+    "navigationLabel": {
+      "type": "string"
+    },
+    "showInNavigation": {
+      "type": "boolean",
+      "default": false
+    },
+    "navigationOrder": {
+      "type": "integer",
+      "default": 10
+    },
+    "sections": {
+      "type": "dynamiczone",
+      "components": [
+        "sections.hero",
+        "sections.rich-text",
+        "sections.image-text",
+        "sections.full-width-image",
+        "sections.project-grid",
+        "sections.services-grid",
+        "sections.presence-grid",
+        "sections.statistics",
+        "sections.process",
+        "sections.testimonials",
+        "sections.before-after",
+        "sections.awards",
+        "sections.faq",
+        "sections.cta",
+        "sections.inquiry-form"
+      ]
+    },
+    "seoTitle": {
+      "type": "string"
+    },
+    "seoDescription": {
+      "type": "text"
+    },
+    "seoImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "canonicalUrl": {
+      "type": "string"
+    },
+    "noIndex": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

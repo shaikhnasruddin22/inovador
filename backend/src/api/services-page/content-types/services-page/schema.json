@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "services_pages",
+  "info": {
+    "singularName": "services-page",
+    "pluralName": "services-pages",
+    "displayName": "Services Page",
+    "description": "Page-level copy and SEO for the /services directory"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "heading": { "type": "string", "default": "Architectural Disciplines & Spatial Practice" },
+    "introduction": { "type": "text", "default": "From master-planned residences and private sanctuaries to holistic brand identities, we orchestrate enduring spatial environments with uncompromising material precision." },
+    "ctaText": { "type": "string", "default": "Initiate Studio Commission" },
+    "ctaLink": { "type": "string", "default": "/contact" },
+    "seoTitle": { "type": "string", "default": "Architecture & Interior Design Services | Inovador Design Studio" },
+    "seoDescription": { "type": "text", "default": "Comprehensive architectural design, interior transformation, landscape curation, and spatial branding practices." },
+    "seoImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

@@ -6,3 +6,7 @@ export * from './hero';
 export * from './process';
 export * from './awards';
 export * from './about';
+export * from './navigation';
+export * from './presence';
+export * from './settings';
+export * from './pages';

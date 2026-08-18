@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "projects_pages",
+  "info": {
+    "singularName": "projects-page",
+    "pluralName": "projects-pages",
+    "displayName": "Projects Page",
+    "description": "Page-level copy and SEO for the /projects archive"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "heading": { "type": "string", "default": "Selected Architectural Portfolio" },
+    "introduction": { "type": "text", "default": "A curated archive of monolithic residences, heritage restorations, and bespoke spatial environments across India's prime terrains." },
+    "ctaText": { "type": "string", "default": "Inquire Regarding a Project" },
+    "ctaLink": { "type": "string", "default": "/contact" },
+    "seoTitle": { "type": "string", "default": "Architectural Portfolio & Selected Works | Inovador Design Studio" },
+    "seoDescription": { "type": "text", "default": "Explore our portfolio of private sanctuaries, luxury coastal villas, urban residences, and hospitality spaces across Mumbai, Goa, and Bengaluru." },
+    "seoImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

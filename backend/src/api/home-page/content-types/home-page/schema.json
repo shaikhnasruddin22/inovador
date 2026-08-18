@@ -1,0 +1,34 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_pages",
+  "info": {
+    "singularName": "home-page",
+    "pluralName": "home-pages",
+    "displayName": "Home Page",
+    "description": "Home page section visibility toggles and page SEO"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "showHero": { "type": "boolean", "default": true },
+    "showProjects": { "type": "boolean", "default": true },
+    "showAboutTeaser": { "type": "boolean", "default": true },
+    "showProcess": { "type": "boolean", "default": true },
+    "showServices": { "type": "boolean", "default": true },
+    "showBeforeAfter": { "type": "boolean", "default": true },
+    "showTestimonials": { "type": "boolean", "default": true },
+    "showAwards": { "type": "boolean", "default": true },
+    "showFaq": { "type": "boolean", "default": true },
+    "showInquiry": { "type": "boolean", "default": true },
+    "seoTitle": { "type": "string", "default": "Inovador Design Studio | Luxury Architecture & Interior Practice" },
+    "seoDescription": { "type": "text", "default": "Bespoke residential architecture, private estates, and luxury interior transformations across Mumbai, Goa, Bengaluru, and New Delhi." },
+    "seoImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

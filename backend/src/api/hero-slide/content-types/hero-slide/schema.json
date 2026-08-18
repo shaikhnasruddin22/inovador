@@ -5,7 +5,7 @@
     "singularName": "hero-slide",
     "pluralName": "hero-slides",
     "displayName": "Hero Slide",
-    "description": "Editorial hero slider slides for Inovador Design Studio"
+    "description": "Editorial hero slider slides with image and cinematic video support"
   },
   "options": {
     "draftAndPublish": true
@@ -25,6 +25,11 @@
     "projectSlug": {
       "type": "string"
     },
+    "mediaType": {
+      "type": "enumeration",
+      "enum": ["image", "video"],
+      "default": "image"
+    },
     "image": {
       "type": "media",
       "multiple": false,
@@ -33,6 +38,53 @@
     },
     "imageUrl": {
       "type": "string"
+    },
+    "desktopVideo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["videos", "files"]
+    },
+    "desktopVideoUrl": {
+      "type": "string"
+    },
+    "mobileVideo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["videos", "files"]
+    },
+    "mobileVideoUrl": {
+      "type": "string"
+    },
+    "posterImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "posterImageUrl": {
+      "type": "string"
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": true
+    },
+    "muted": {
+      "type": "boolean",
+      "default": true
+    },
+    "loop": {
+      "type": "boolean",
+      "default": true
+    },
+    "playsInline": {
+      "type": "boolean",
+      "default": true
+    },
+    "slideDuration": {
+      "type": "integer",
+      "default": 8000
     },
     "sortOrder": {
       "type": "integer",

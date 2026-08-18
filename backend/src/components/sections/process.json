@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_sections_processes",
+  "info": {
+    "displayName": "Process Timeline",
+    "icon": "calendar",
+    "description": "Methodology and project execution steps"
+  },
+  "options": {},
+  "attributes": {
+    "heading": { "type": "string", "default": "Methodology & Precision" },
+    "subtitle": { "type": "text" }
+  }
+}
