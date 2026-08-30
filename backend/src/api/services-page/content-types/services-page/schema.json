@@ -18,6 +18,12 @@
     "ctaLink": { "type": "string", "default": "/contact" },
     "seoTitle": { "type": "string", "default": "Architecture & Interior Design Services | Inovador Design Studio" },
     "seoDescription": { "type": "text", "default": "Comprehensive architectural design, interior transformation, landscape curation, and spatial branding practices." },
+    "bannerImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
     "seoImage": {
       "type": "media",
       "multiple": false,

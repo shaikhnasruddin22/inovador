@@ -227,6 +227,7 @@ export interface ServicesPageData {
   introduction: string;
   ctaText: string;
   ctaLink: string;
+  bannerImage?: string;
   seoTitle: string;
   seoDescription: string;
   seoImage?: string;
@@ -237,6 +238,7 @@ export interface ProjectsPageData {
   introduction: string;
   ctaText: string;
   ctaLink: string;
+  bannerImage?: string;
   seoTitle: string;
   seoDescription: string;
   seoImage?: string;
@@ -251,6 +253,7 @@ export interface ContactPageData {
   officeHours: string;
   advisoryProtocol: string;
   ctaText: string;
+  bannerImage?: string;
   seoTitle: string;
   seoDescription: string;
   seoImage?: string;

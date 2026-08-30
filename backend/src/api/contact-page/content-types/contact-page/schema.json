@@ -22,6 +22,12 @@
     "ctaText": { "type": "string", "default": "Schedule Advisory Consultation" },
     "seoTitle": { "type": "string", "default": "Contact & Commission Inquiries | Inovador Design Studio" },
     "seoDescription": { "type": "text", "default": "Initiate a conversation with our architectural and spatial design studio in Mumbai and Goa." },
+    "bannerImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
     "seoImage": {
       "type": "media",
       "multiple": false,

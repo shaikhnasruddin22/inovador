@@ -472,6 +472,7 @@ export function normalizeServicesPage(raw: StrapiServicesPageItem): ServicesPage
       'From monolithic residential architecture to bespoke private interior environments, our practice is defined by material honesty and structural stillness.',
     ctaText: item.ctaText || 'Commission a Spatial Brief',
     ctaLink: item.ctaLink || '/#contact',
+    bannerImage: typeof item.bannerImage === 'string' ? item.bannerImage : getMediaUrl(item.bannerImage),
     seoTitle: item.seoTitle || 'Disciplines & Capabilities | Inovador Design Studio',
     seoDescription:
       item.seoDescription ||
@@ -490,6 +491,7 @@ export function normalizeProjectsPage(raw: StrapiProjectsPageItem): ProjectsPage
       'A curated collection of residential sanctuaries, coastal retreats, and commercial ateliers sculpted with raw materiality.',
     ctaText: item.ctaText || 'Discuss a Project Commission',
     ctaLink: item.ctaLink || '/#contact',
+    bannerImage: typeof item.bannerImage === 'string' ? item.bannerImage : getMediaUrl(item.bannerImage),
     seoTitle: item.seoTitle || 'Selected Works & Architecture Portfolio | Inovador Design Studio',
     seoDescription:
       item.seoDescription ||
@@ -514,12 +516,13 @@ export function normalizeContactPage(raw: StrapiContactPageItem): ContactPageDat
       item.advisoryProtocol ||
       'Initial consultations are conducted by appointment at our studio drawing rooms or via secure video conference for international patrons.',
     ctaText: item.ctaText || 'Submit Spatial Inquiry',
+    bannerImage: typeof item.bannerImage === 'string' ? item.bannerImage : getMediaUrl(item.bannerImage),
     seoTitle:
       item.seoTitle ||
       'Contact & Commission Inquiries | Inovador Design Studio',
     seoDescription:
       item.seoDescription ||
-      'Initiate a conversation with our architectural and spatial design studio in Mumbai and Goa.',
+      'Get in touch with Inovador Design Studio to initiate your residential architecture or interior transformation project.',
     seoImage: typeof item.seoImage === 'string' ? item.seoImage : getMediaUrl(item.seoImage),
   };
 }

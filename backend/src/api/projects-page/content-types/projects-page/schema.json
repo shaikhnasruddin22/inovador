@@ -18,6 +18,12 @@
     "ctaLink": { "type": "string", "default": "/contact" },
     "seoTitle": { "type": "string", "default": "Architectural Portfolio & Selected Works | Inovador Design Studio" },
     "seoDescription": { "type": "text", "default": "Explore our portfolio of private sanctuaries, luxury coastal villas, urban residences, and hospitality spaces across Mumbai, Goa, and Bengaluru." },
+    "bannerImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
     "seoImage": {
       "type": "media",
       "multiple": false,
