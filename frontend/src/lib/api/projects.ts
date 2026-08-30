@@ -17,8 +17,6 @@ export async function getProjects(): Promise<Project[]> {
         populate: '*',
         'sort[0]': 'sortOrder:asc',
       },
-      tags: ['projects'],
-      revalidate: 3600,
     });
 
     if (response && response.data && Array.isArray(response.data)) {

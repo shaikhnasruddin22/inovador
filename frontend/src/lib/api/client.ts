@@ -104,10 +104,7 @@ export async function fetchAPI<T = unknown>(
     const res = await fetch(requestUrl, {
       ...rest,
       headers: requestHeaders,
-      next: {
-        tags: tags || [],
-        revalidate: typeof revalidate === 'number' ? revalidate : undefined,
-      },
+      cache: 'no-store',
     });
 
     if (!res.ok) {
