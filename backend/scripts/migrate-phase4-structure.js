@@ -1,14 +1,15 @@
-const jwt = require('../node_modules/jsonwebtoken');
 const path = require('path');
 const fs = require('fs');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+const jwt = require('../node_modules/jsonwebtoken');
 
 async function migratePhase4Structure() {
   console.log('================================================================');
   console.log('  PHASE 4A + 4B — STRAPI V5 CMS STRUCTURE & CONTENT MIGRATION  ');
   console.log('================================================================\n');
 
-  const STRAPI_URL = 'http://localhost:1337';
-  const ADMIN_JWT_SECRET = 'inovadorAdminJwtSecret_83jfd902jfk29f83j209';
+  const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';
+  const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'inovadorAdminJwtSecret_83jfd902jfk29f83j209';
   const token = jwt.sign({ id: 1 }, ADMIN_JWT_SECRET, { expiresIn: '7d' });
 
   const headers = {
