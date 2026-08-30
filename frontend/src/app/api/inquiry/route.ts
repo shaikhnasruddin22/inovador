@@ -6,8 +6,10 @@ const STRAPI_API_URL = process.env.STRAPI_API_URL || 'http://localhost:1337';
 const STRAPI_WRITE_TOKEN = process.env.STRAPI_WRITE_TOKEN;
 const TURNSTILE_SECRET = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const STUDIO_NOTIFICATION_EMAIL = process.env.STUDIO_NOTIFICATION_EMAIL || 'studio@inovadordesign.example';
-const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Inovador Briefs <onboarding@resend.dev>';
+const STUDIO_NOTIFICATION_EMAIL =
+  process.env.STUDIO_NOTIFICATION_EMAIL || 'hibbaninfotech@gmail.com';
+const RESEND_FROM_EMAIL =
+  process.env.RESEND_FROM_EMAIL || 'Inovador Design Studio <onboarding@resend.dev>';
 
 const inquirySchema = z.object({
   name: z.string().trim().min(2, 'Name must be at least 2 characters').max(120, 'Name is too long'),
@@ -44,44 +46,73 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, message: 'Inquiry received' }, { status: 200 });
     }
 
-    // 3. Cloudflare Turnstile Server-Side Verification (Only if real credentials are configured)
-    const isTurnstileConfigured =
-      TURNSTILE_SECRET &&
-      !TURNSTILE_SECRET.toLowerCase().includes('placeholder') &&
-      !TURNSTILE_SECRET.toLowerCase().includes('your_turnstile') &&
-      !TURNSTILE_SECRET.startsWith('0x4AAAAAA') &&
-      TURNSTILE_SECRET.length > 20;
+    // 3. Cloudflare Turnstile Server-Side Canonical Siteverify
+    const expectedAction = 'contact';
+    const expectedHostnames = new Set([
+      'inovadordesignstudio.com',
+      'www.inovadordesignstudio.com',
+      'localhost',
+      '127.0.0.1',
+      ...(process.env.TURNSTILE_HOSTNAMES ?? '')
+        .split(',')
+        .map((h) => h.trim())
+        .filter(Boolean),
+    ]);
 
-    if (isTurnstileConfigured) {
-      if (!turnstileToken) {
-        console.warn('[Turnstile Notice]: Submission without turnstileToken, checking honeypot only.');
-      } else {
-        try {
-          const verifyFormData = new FormData();
-          verifyFormData.append('secret', TURNSTILE_SECRET);
-          verifyFormData.append('response', turnstileToken);
+    if (TURNSTILE_SECRET) {
+      if (
+        typeof turnstileToken !== 'string' ||
+        turnstileToken.length === 0 ||
+        turnstileToken.length > 2048
+      ) {
+        return NextResponse.json(
+          { error: 'Security verification required. Please complete the captcha check.' },
+          { status: 403 }
+        );
+      }
 
-          const ip = req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip');
-          if (ip) {
-            verifyFormData.append('remoteip', ip);
-          }
+      try {
+        const clientIp =
+          req.headers.get('cf-connecting-ip') ||
+          req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+          '';
 
-          const turnstileRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        const siteverifyRes = await fetch(
+          'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+          {
             method: 'POST',
-            body: verifyFormData,
-          });
-
-          const turnstileJson = await turnstileRes.json();
-          if (!turnstileJson.success) {
-            console.warn('[Turnstile Verification Failed]:', turnstileJson);
-            return NextResponse.json(
-              { error: 'Security verification failed. Please refresh and try again.' },
-              { status: 400 }
-            );
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            signal: AbortSignal.timeout(10_000),
+            body: new URLSearchParams({
+              secret: TURNSTILE_SECRET,
+              response: turnstileToken,
+              remoteip: clientIp,
+            }),
           }
-        } catch (tsError) {
-          console.error('[Turnstile Network Error]:', tsError);
+        );
+
+        if (!siteverifyRes.ok) {
+          throw new Error(`siteverify returned HTTP ${siteverifyRes.status}`);
         }
+
+        const turnstileResult = await siteverifyRes.json();
+        if (
+          !turnstileResult.success ||
+          (turnstileResult.action && turnstileResult.action !== expectedAction) ||
+          (turnstileResult.hostname && !expectedHostnames.has(turnstileResult.hostname))
+        ) {
+          console.warn('[Turnstile Rejected]:', turnstileResult);
+          return NextResponse.json(
+            { error: 'Security verification failed. Please refresh and try again.' },
+            { status: 403 }
+          );
+        }
+      } catch (tsError) {
+        console.error('[Turnstile Network/Verification Error]:', tsError);
+        return NextResponse.json(
+          { error: 'Security verification could not be validated. Please try again.' },
+          { status: 403 }
+        );
       }
     }
 
@@ -124,6 +155,11 @@ export async function POST(req: NextRequest) {
 
     const strapiData = await strapiRes.json().catch(() => ({}));
     const inquiryId = strapiData?.data?.id || strapiData?.data?.documentId || 'NEW';
+
+    // 5. Send Emails via Resend
+    if (RESEND_API_KEY && !RESEND_API_KEY.includes('PLACEHOLDER')) {
+      try {
+        const resend = new Resend(RESEND_API_KEY);
 
         // 5a. Send Studio Team Notification
         await resend.emails.send({

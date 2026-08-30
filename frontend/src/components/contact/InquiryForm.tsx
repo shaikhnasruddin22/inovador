@@ -1,10 +1,34 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Script from 'next/script';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, ArrowUpRight, AlertCircle, Loader2 } from 'lucide-react';
 import { InquiryFormData } from '@/types';
 import { EASE_EDITORIAL, EASE_SMOOTH } from '@/lib/utils/animations';
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        container: HTMLElement | string,
+        params: {
+          sitekey: string;
+          action?: string;
+          theme?: 'light' | 'dark' | 'auto';
+          callback?: (token: string) => void;
+          'error-callback'?: () => void;
+          'expired-callback'?: () => void;
+        }
+      ) => string;
+      reset: (widgetId?: string) => void;
+      remove: (widgetId?: string) => void;
+    };
+  }
+}
+
+const TURNSTILE_SITE_KEY =
+  process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || '0x4AAAAAAEiM_oSp7QMUzEMr';
 
 export function InquiryForm() {
   const [formData, setFormData] = useState<InquiryFormData>({
@@ -17,8 +41,55 @@ export function InquiryForm() {
     honeypot: '',
   });
 
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const turnstileContainerRef = useRef<HTMLDivElement>(null);
+  const widgetIdRef = useRef<string | null>(null);
+
+  // Render Turnstile widget when script is ready
+  const renderTurnstile = () => {
+    if (
+      typeof window !== 'undefined' &&
+      window.turnstile &&
+      turnstileContainerRef.current &&
+      !widgetIdRef.current &&
+      TURNSTILE_SITE_KEY
+    ) {
+      try {
+        widgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
+          sitekey: TURNSTILE_SITE_KEY,
+          action: 'contact',
+          theme: 'light',
+          callback: (token: string) => {
+            setTurnstileToken(token);
+          },
+          'expired-callback': () => {
+            setTurnstileToken('');
+          },
+          'error-callback': () => {
+            setTurnstileToken('');
+          },
+        });
+      } catch (e) {
+        console.warn('Turnstile render notice:', e);
+      }
+    }
+  };
+
+  useEffect(() => {
+    renderTurnstile();
+    return () => {
+      if (widgetIdRef.current && window.turnstile) {
+        try {
+          window.turnstile.remove(widgetIdRef.current);
+          widgetIdRef.current = null;
+        } catch {
+          // ignore
+        }
+      }
+    };
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -53,7 +124,10 @@ export function InquiryForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          turnstileToken,
+        }),
       });
 
       const data = await res.json().catch(() => ({}));
@@ -63,6 +137,9 @@ export function InquiryForm() {
       }
 
       setStatus('success');
+      if (widgetIdRef.current && window.turnstile) {
+        window.turnstile.reset(widgetIdRef.current);
+      }
     } catch (err: unknown) {
       const message =
         err instanceof Error
@@ -70,6 +147,9 @@ export function InquiryForm() {
           : 'An error occurred during submission. Please try again or reach out directly.';
       setStatus('error');
       setErrorMessage(message);
+      if (widgetIdRef.current && window.turnstile) {
+        window.turnstile.reset(widgetIdRef.current);
+      }
     }
   };
 
@@ -267,6 +347,16 @@ export function InquiryForm() {
                 onChange={handleChange}
                 placeholder="Share your site location, approximate area (sq.ft), lifestyle rituals, or key architectural aspirations..."
                 className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-light)] text-sm text-[var(--text-primary)] focus:bg-white focus:border-[var(--accent-terracotta)] focus:outline-none transition-colors resize-none"
+              />
+            </div>
+
+            {/* Cloudflare Turnstile Captcha Widget */}
+            <div className="py-2">
+              <div ref={turnstileContainerRef} className="min-h-[65px]" />
+              <Script
+                src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+                strategy="lazyOnload"
+                onLoad={renderTurnstile}
               />
             </div>
 
