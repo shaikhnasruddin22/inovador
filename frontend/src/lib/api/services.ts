@@ -11,17 +11,21 @@ export async function getServices(): Promise<Service[]> {
     return (mockServices as Service[]).sort((a, b) => a.sortOrder - b.sortOrder);
   }
 
-  const response = await fetchAPI<StrapiServiceItem[]>('/api/services', {
-    params: {
-      'sort[0]': 'sortOrder:asc',
-    },
-    tags: ['services'],
-    revalidate: 3600,
-  });
+  try {
+    const response = await fetchAPI<StrapiServiceItem[]>('/api/services', {
+      params: {
+        'sort[0]': 'sortOrder:asc',
+      },
+      tags: ['services'],
+      revalidate: 3600,
+    });
 
-  if (!response.data || !Array.isArray(response.data)) {
-    return [];
+    if (response && response.data && Array.isArray(response.data)) {
+      return response.data.map(normalizeService).sort((a, b) => a.sortOrder - b.sortOrder);
+    }
+  } catch (e) {
+    console.error('Error fetching services from Strapi, using fallback:', e);
   }
 
-  return response.data.map(normalizeService).sort((a, b) => a.sortOrder - b.sortOrder);
+  return (mockServices as Service[]).sort((a, b) => a.sortOrder - b.sortOrder);
 }

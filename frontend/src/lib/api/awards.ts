@@ -11,20 +11,26 @@ export async function getAwards(): Promise<AwardOrPress[]> {
     return mockAwards as AwardOrPress[];
   }
 
-  const response = await fetchAPI<StrapiAwardPressItem[]>('/api/award-presses', {
-    params: {
-      'sort[0]': 'sortOrder:asc',
-    },
-    tags: ['awards-press'],
-    revalidate: 3600,
-  });
+  try {
+    const response = await fetchAPI<StrapiAwardPressItem[]>('/api/award-presses', {
+      params: {
+        'sort[0]': 'sortOrder:asc',
+      },
+      tags: ['awards-press'],
+      revalidate: 3600,
+    });
 
-  if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
-    return [];
+    if (response && response.data && Array.isArray(response.data) && response.data.length > 0) {
+      return response.data
+        .map(normalizeAwardPress)
+        .filter((a) => a.active !== false)
+        .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    }
+  } catch (e) {
+    console.error('Error fetching awards from Strapi, using fallback:', e);
   }
 
-  return response.data
-    .map(normalizeAwardPress)
+  return (mockAwards as AwardOrPress[])
     .filter((a) => a.active !== false)
     .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 }

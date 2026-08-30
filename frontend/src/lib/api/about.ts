@@ -85,14 +85,18 @@ export async function getStudioAbout(): Promise<StudioAbout> {
     return defaultStudioAbout;
   }
 
-  const response = await fetchAPI<StrapiStudioAboutItem>('/api/studio-about', {
-    tags: ['studio-about'],
-    revalidate: 3600,
-  });
+  try {
+    const response = await fetchAPI<StrapiStudioAboutItem>('/api/studio-about', {
+      tags: ['studio-about'],
+      revalidate: 3600,
+    });
 
-  if (!response.data) {
-    throw new Error('[CMS Error]: Studio / About single-type record not found in Strapi.');
+    if (response && response.data) {
+      return normalizeStudioAbout(response.data);
+    }
+  } catch (error) {
+    console.error('Error fetching StudioAbout from Strapi:', error);
   }
 
-  return normalizeStudioAbout(response.data);
+  return defaultStudioAbout;
 }

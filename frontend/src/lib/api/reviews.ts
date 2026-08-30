@@ -11,18 +11,22 @@ export async function getTestimonials(): Promise<Testimonial[]> {
     return (mockTestimonials as Testimonial[]).sort((a, b) => a.sortOrder - b.sortOrder);
   }
 
-  const response = await fetchAPI<StrapiTestimonialItem[]>('/api/testimonials', {
-    params: {
-      populate: '*',
-      'sort[0]': 'sortOrder:asc',
-    },
-    tags: ['testimonials'],
-    revalidate: 3600,
-  });
+  try {
+    const response = await fetchAPI<StrapiTestimonialItem[]>('/api/testimonials', {
+      params: {
+        populate: '*',
+        'sort[0]': 'sortOrder:asc',
+      },
+      tags: ['testimonials'],
+      revalidate: 3600,
+    });
 
-  if (!response.data || !Array.isArray(response.data)) {
-    return [];
+    if (response && response.data && Array.isArray(response.data)) {
+      return response.data.map(normalizeTestimonial).sort((a, b) => a.sortOrder - b.sortOrder);
+    }
+  } catch (e) {
+    console.error('Error fetching testimonials from Strapi, using fallback:', e);
   }
 
-  return response.data.map(normalizeTestimonial).sort((a, b) => a.sortOrder - b.sortOrder);
+  return (mockTestimonials as Testimonial[]).sort((a, b) => a.sortOrder - b.sortOrder);
 }

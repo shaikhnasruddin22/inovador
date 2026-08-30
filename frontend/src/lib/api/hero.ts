@@ -46,21 +46,25 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
     return mockHeroSlides.sort((a, b) => a.sortOrder - b.sortOrder);
   }
 
-  const response = await fetchAPI<StrapiHeroSlideItem[]>('/api/hero-slides', {
-    params: {
-      populate: '*',
-      'sort[0]': 'sortOrder:asc',
-    },
-    tags: ['hero-slides'],
-    revalidate: 3600,
-  });
+  try {
+    const response = await fetchAPI<StrapiHeroSlideItem[]>('/api/hero-slides', {
+      params: {
+        populate: '*',
+        'sort[0]': 'sortOrder:asc',
+      },
+      tags: ['hero-slides'],
+      revalidate: 3600,
+    });
 
-  if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
-    return [];
+    if (response && response.data && Array.isArray(response.data) && response.data.length > 0) {
+      return response.data
+        .map(normalizeHeroSlide)
+        .filter((s) => s.active !== false)
+        .sort((a, b) => a.sortOrder - b.sortOrder);
+    }
+  } catch (e) {
+    console.error('Error fetching hero slides from Strapi, using fallback:', e);
   }
 
-  return response.data
-    .map(normalizeHeroSlide)
-    .filter((s) => s.active !== false)
-    .sort((a, b) => a.sortOrder - b.sortOrder);
+  return mockHeroSlides.sort((a, b) => a.sortOrder - b.sortOrder);
 }

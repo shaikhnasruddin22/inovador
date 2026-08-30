@@ -11,17 +11,21 @@ export async function getFAQs(): Promise<FAQItem[]> {
     return (mockFAQs as FAQItem[]).sort((a, b) => a.sortOrder - b.sortOrder);
   }
 
-  const response = await fetchAPI<StrapiFAQItem[]>('/api/faqs', {
-    params: {
-      'sort[0]': 'sortOrder:asc',
-    },
-    tags: ['faqs'],
-    revalidate: 3600,
-  });
+  try {
+    const response = await fetchAPI<StrapiFAQItem[]>('/api/faqs', {
+      params: {
+        'sort[0]': 'sortOrder:asc',
+      },
+      tags: ['faqs'],
+      revalidate: 3600,
+    });
 
-  if (!response.data || !Array.isArray(response.data)) {
-    return [];
+    if (response && response.data && Array.isArray(response.data)) {
+      return response.data.map(normalizeFAQ).sort((a, b) => a.sortOrder - b.sortOrder);
+    }
+  } catch (e) {
+    console.error('Error fetching FAQs from Strapi, using fallback:', e);
   }
 
-  return response.data.map(normalizeFAQ).sort((a, b) => a.sortOrder - b.sortOrder);
+  return (mockFAQs as FAQItem[]).sort((a, b) => a.sortOrder - b.sortOrder);
 }

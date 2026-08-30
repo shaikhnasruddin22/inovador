@@ -11,20 +11,24 @@ export async function getProjects(): Promise<Project[]> {
     return (mockProjects as Project[]).sort((a, b) => a.sortOrder - b.sortOrder);
   }
 
-  const response = await fetchAPI<StrapiProjectItem[]>('/api/projects', {
-    params: {
-      populate: '*',
-      'sort[0]': 'sortOrder:asc',
-    },
-    tags: ['projects'],
-    revalidate: 3600,
-  });
+  try {
+    const response = await fetchAPI<StrapiProjectItem[]>('/api/projects', {
+      params: {
+        populate: '*',
+        'sort[0]': 'sortOrder:asc',
+      },
+      tags: ['projects'],
+      revalidate: 3600,
+    });
 
-  if (!response.data || !Array.isArray(response.data)) {
-    return [];
+    if (response && response.data && Array.isArray(response.data)) {
+      return response.data.map(normalizeProject).sort((a, b) => a.sortOrder - b.sortOrder);
+    }
+  } catch (e) {
+    console.error('Error fetching projects from Strapi, using fallback:', e);
   }
 
-  return response.data.map(normalizeProject).sort((a, b) => a.sortOrder - b.sortOrder);
+  return (mockProjects as Project[]).sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
 export async function getFeaturedProjects(): Promise<Project[]> {
@@ -37,20 +41,24 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
     return (mockProjects as Project[]).find((p) => p.slug === slug) || null;
   }
 
-  const response = await fetchAPI<StrapiProjectItem[]>('/api/projects', {
-    params: {
-      'filters[slug][$eq]': slug,
-      populate: '*',
-    },
-    tags: ['projects', `project-${slug}`],
-    revalidate: 3600,
-  });
+  try {
+    const response = await fetchAPI<StrapiProjectItem[]>('/api/projects', {
+      params: {
+        'filters[slug][$eq]': slug,
+        populate: '*',
+      },
+      tags: ['projects', `project-${slug}`],
+      revalidate: 3600,
+    });
 
-  if (response.data && response.data.length > 0) {
-    return normalizeProject(response.data[0]);
+    if (response && response.data && response.data.length > 0) {
+      return normalizeProject(response.data[0]);
+    }
+  } catch (e) {
+    console.error(`Error fetching project "${slug}" from Strapi, using fallback:`, e);
   }
 
-  return null;
+  return (mockProjects as Project[]).find((p) => p.slug === slug) || null;
 }
 
 export async function getAdjacentProjects(
