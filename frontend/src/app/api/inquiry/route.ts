@@ -125,52 +125,105 @@ export async function POST(req: NextRequest) {
     const strapiData = await strapiRes.json().catch(() => ({}));
     const inquiryId = strapiData?.data?.id || strapiData?.data?.documentId || 'NEW';
 
-    // 5. Send Studio Email Notification via Resend
-    if (RESEND_API_KEY && !RESEND_API_KEY.includes('PLACEHOLDER')) {
-      try {
-        const resend = new Resend(RESEND_API_KEY);
+        // 5a. Send Studio Team Notification
         await resend.emails.send({
           from: RESEND_FROM_EMAIL,
           to: STUDIO_NOTIFICATION_EMAIL,
           replyTo: email,
           subject: `[New Studio Inquiry #${inquiryId}] ${name} — ${projectType}`,
           html: `
-            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #111111; line-height: 1.6;">
-              <h2 style="font-size: 20px; font-weight: 600; border-bottom: 2px solid #A45A2A; padding-bottom: 12px; margin-bottom: 20px;">
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 32px 24px; color: #111111; line-height: 1.6; background-color: #ffffff;">
+              <h2 style="font-family: Georgia, serif; font-size: 24px; font-weight: 300; border-bottom: 2px solid #A45A2A; padding-bottom: 12px; margin-bottom: 24px; color: #111111;">
                 New Spatial Commission Inquiry
               </h2>
               <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
                 <tr>
-                  <td style="padding: 8px 0; color: #737373; width: 140px; font-size: 13px; text-transform: uppercase;">Patron Name</td>
-                  <td style="padding: 8px 0; font-weight: 500;">${name}</td>
+                  <td style="padding: 10px 0; color: #737373; width: 140px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Patron Name</td>
+                  <td style="padding: 10px 0; font-weight: 600; color: #111111;">${name}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0; color: #737373; font-size: 13px; text-transform: uppercase;">Email</td>
-                  <td style="padding: 8px 0;"><a href="mailto:${email}" style="color: #A45A2A; text-decoration: none;">${email}</a></td>
+                  <td style="padding: 10px 0; color: #737373; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Email</td>
+                  <td style="padding: 10px 0;"><a href="mailto:${email}" style="color: #A45A2A; text-decoration: none; font-weight: 500;">${email}</a></td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0; color: #737373; font-size: 13px; text-transform: uppercase;">Phone</td>
-                  <td style="padding: 8px 0;">${phone || 'Not provided'}</td>
+                  <td style="padding: 10px 0; color: #737373; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Phone</td>
+                  <td style="padding: 10px 0; color: #111111;">${phone || 'Not provided'}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0; color: #737373; font-size: 13px; text-transform: uppercase;">Project Typology</td>
-                  <td style="padding: 8px 0; font-weight: 500;">${projectType}</td>
+                  <td style="padding: 10px 0; color: #737373; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Typology</td>
+                  <td style="padding: 10px 0; font-weight: 600; color: #111111;">${projectType}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0; color: #737373; font-size: 13px; text-transform: uppercase;">Timeline</td>
-                  <td style="padding: 8px 0;">${timeline || 'Not specified'}</td>
+                  <td style="padding: 10px 0; color: #737373; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Timeline</td>
+                  <td style="padding: 10px 0; color: #111111;">${timeline || 'Not specified'}</td>
                 </tr>
               </table>
-              <div style="background-color: #F4F1EC; padding: 16px 20px; border-left: 4px solid #A45A2A; margin-bottom: 24px;">
-                <p style="margin: 0; font-size: 14px; font-style: italic; white-space: pre-wrap;">&ldquo;${message}&rdquo;</p>
+              <div style="background-color: #F4F1EC; padding: 20px 24px; border-left: 4px solid #A45A2A; margin-bottom: 24px;">
+                <p style="margin: 0; font-size: 15px; font-style: italic; color: #333333; line-height: 1.6; white-space: pre-wrap;">&ldquo;${message}&rdquo;</p>
               </div>
               <p style="font-size: 12px; color: #8C877E; border-top: 1px solid #E5E0D8; padding-top: 16px;">
-                Inquiry captured by Inovador Design Studio Engine. Status: <strong>new</strong>.
+                Recorded in Inovador CMS · Status: <strong>new</strong> · ID: #${inquiryId}
               </p>
             </div>
           `,
         });
-        console.log(`[Resend Email Sent Successfully for Inquiry #${inquiryId}]`);
+
+        // 5b. Send Automated Confirmation / Auto-Reply to the User/Patron
+        await resend.emails.send({
+          from: RESEND_FROM_EMAIL,
+          to: email,
+          subject: `Thank you for contacting Inovador Design Studio | Commission Inquiry Confirmation`,
+          html: `
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 36px 24px; color: #111111; line-height: 1.7; background-color: #ffffff;">
+              <div style="text-align: center; margin-bottom: 32px;">
+                <h1 style="font-family: Georgia, serif; font-size: 26px; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; margin: 0; color: #111111;">
+                  INOVADOR
+                </h1>
+                <span style="font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: #8C877E; display: block; margin-top: 6px;">
+                  Architecture &amp; Spatial Transformation
+                </span>
+              </div>
+              
+              <div style="border-top: 1px solid #E5E0D8; border-bottom: 1px solid #E5E0D8; padding: 28px 0; margin-bottom: 28px;">
+                <p style="font-size: 16px; margin-top: 0;">Dear ${name},</p>
+                
+                <p style="font-size: 15px; color: #333333;">
+                  Thank you for your interest in commissioning Inovador Design Studio. We have received your brief regarding your <strong>${projectType}</strong> project.
+                </p>
+                
+                <p style="font-size: 15px; color: #333333;">
+                  Our principal architects and design partners review every commission personally. We will connect with you within <strong>24 to 48 business hours</strong> to discuss your site context, scope, and initial advisory alignment.
+                </p>
+
+                <div style="background-color: #F4F1EC; padding: 18px 22px; border-left: 3px solid #A45A2A; margin: 24px 0;">
+                  <p style="margin: 0; font-size: 13px; color: #555555;">
+                    <strong>Inquiry Reference:</strong> #${inquiryId}<br/>
+                    <strong>Selected Typology:</strong> ${projectType}<br/>
+                    <strong>Direct Studio Line:</strong> +91 22 6984 3200
+                  </p>
+                </div>
+
+                <p style="font-size: 14px; color: #666666; margin-bottom: 0;">
+                  In the interim, we invite you to explore our recent built commissions across India:
+                  <br/>
+                  <a href="https://www.inovadordesignstudio.com/projects" style="color: #A45A2A; text-decoration: none; font-weight: 500; display: inline-block; margin-top: 8px;">
+                    View Selected Portfolio &rarr;
+                  </a>
+                </p>
+              </div>
+
+              <div style="font-size: 12px; color: #8C877E; line-height: 1.5; text-align: center;">
+                <p style="margin: 0;">
+                  Inovador Design Studio · Kala Ghoda, Mumbai &amp; Assagao, Goa
+                  <br/>
+                  <a href="https://www.inovadordesignstudio.com" style="color: #8C877E; text-decoration: underline;">www.inovadordesignstudio.com</a>
+                </p>
+              </div>
+            </div>
+          `,
+        });
+
+        console.log(`[Resend Email + Auto-Reply Sent for Inquiry #${inquiryId}]`);
       } catch (emailErr) {
         console.error('[Resend Email Dispatch Failed]:', emailErr);
       }
