@@ -90,8 +90,12 @@ export async function fetchAPI<T = unknown>(
     ...(headers as Record<string, string>),
   };
 
-  // Attach server-side token if present
-  if (STRAPI_READ_TOKEN && !STRAPI_READ_TOKEN.includes('PLACEHOLDER')) {
+  // Attach server-side token if present and not a dummy/placeholder value
+  if (
+    STRAPI_READ_TOKEN &&
+    !STRAPI_READ_TOKEN.toLowerCase().includes('placeholder') &&
+    !STRAPI_READ_TOKEN.toLowerCase().includes('your_strapi')
+  ) {
     requestHeaders['Authorization'] = `Bearer ${STRAPI_READ_TOKEN}`;
   }
 
