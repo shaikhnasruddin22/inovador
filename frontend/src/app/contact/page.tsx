@@ -5,6 +5,9 @@ import { InquirySection } from '@/components/contact/InquirySection';
 import { getContactPage, getStudioAbout } from '@/lib/api';
 import { MapPin, Clock, ShieldCheck } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function generateMetadata(): Promise<Metadata> {
   const pageConfig = await getContactPage().catch(() => null);
   if (!pageConfig) return { title: 'Contact & Inquiries | Inovador Design Studio' };

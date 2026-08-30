@@ -16,6 +16,9 @@ interface PageProps {
   }>;
 }
 
+export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const projects = await getProjects();
   return projects.map((p) => ({

@@ -7,6 +7,9 @@ import { Container } from '@/components/layout/Container';
 import { getPresence, getStudioAbout } from '@/lib/api';
 import { InquirySection } from '@/components/contact/InquirySection';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'Studio Presence & Locations | Inovador Design Studio',
   description: 'Our architectural studios and presence across Mumbai, Goa, Bengaluru, New Delhi, and Alibaug.',
