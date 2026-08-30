@@ -126,6 +126,7 @@ export interface StudioAbout {
   socials: SocialLink[];
   heroHeadline: string;
   heroSubtitle: string;
+  bannerImage?: string;
   ethosEyebrow: string;
   ethosHeadline: string;
   ethosDescription1: string;
@@ -234,6 +235,17 @@ export interface ServicesPageData {
 }
 
 export interface ProjectsPageData {
+  heading: string;
+  introduction: string;
+  ctaText: string;
+  ctaLink: string;
+  bannerImage?: string;
+  seoTitle: string;
+  seoDescription: string;
+  seoImage?: string;
+}
+
+export interface PresencePageData {
   heading: string;
   introduction: string;
   ctaText: string;

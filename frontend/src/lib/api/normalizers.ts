@@ -16,6 +16,7 @@ import {
   HomePageData,
   ServicesPageData,
   ProjectsPageData,
+  PresencePageData,
   ContactPageData,
   Page,
   PageSection,
@@ -36,6 +37,7 @@ import {
   StrapiHomePageItem,
   StrapiServicesPageItem,
   StrapiProjectsPageItem,
+  StrapiPresencePageItem,
   StrapiContactPageItem,
   StrapiPageItem,
   StrapiPageSectionItem,
@@ -313,6 +315,7 @@ export function normalizeStudioAbout(raw: StrapiStudioAboutItem): StudioAbout {
     heroSubtitle:
       item.heroSubtitle ||
       'We are an interdisciplinary studio of architects, interior designers, and landscape planners dedicated to creating enduring spaces that celebrate the ritual of daily dwelling.',
+    bannerImage: typeof item.bannerImage === 'string' ? item.bannerImage : getMediaUrl(item.bannerImage),
     ethosEyebrow: item.ethosEyebrow || 'The Inovador Ethos',
     ethosHeadline:
       item.ethosHeadline || 'Architecture grounded in material honesty & spatial stillness.',
@@ -496,6 +499,25 @@ export function normalizeProjectsPage(raw: StrapiProjectsPageItem): ProjectsPage
     seoDescription:
       item.seoDescription ||
       'Explore the architectural and interior portfolio of Inovador Design Studio across Mumbai, Goa, and Alibaug.',
+    seoImage: typeof item.seoImage === 'string' ? item.seoImage : getMediaUrl(item.seoImage),
+  };
+}
+
+export function normalizePresencePage(raw: StrapiPresencePageItem): PresencePageData {
+  const item = raw.attributes || raw;
+
+  return {
+    heading: item.heading || 'Studio Presence & Regional Ateliers',
+    introduction:
+      item.introduction ||
+      'Operating from our primary drawing rooms in Mumbai and Goa, we orchestrate residential commissions, private estates, and hospitality retreats across India’s most distinctive topographies.',
+    ctaText: item.ctaText || 'Inquire Regarding Studio Presence',
+    ctaLink: item.ctaLink || '/contact',
+    bannerImage: typeof item.bannerImage === 'string' ? item.bannerImage : getMediaUrl(item.bannerImage),
+    seoTitle: item.seoTitle || 'Studio Presence & Atelier Locations | Inovador Design Studio',
+    seoDescription:
+      item.seoDescription ||
+      'Explore our geographic presence and regional architectural practices across Mumbai, Goa, Bengaluru, New Delhi, and Alibaug.',
     seoImage: typeof item.seoImage === 'string' ? item.seoImage : getMediaUrl(item.seoImage),
   };
 }

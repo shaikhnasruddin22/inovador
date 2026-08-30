@@ -1,0 +1,34 @@
+{
+  "kind": "singleType",
+  "collectionName": "presence_pages",
+  "info": {
+    "singularName": "presence-page",
+    "pluralName": "presence-pages",
+    "displayName": "Presence Page",
+    "description": "Page-level copy, hero banner, and SEO for the /presence directory"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "heading": { "type": "string", "default": "Studio Presence & Regional Ateliers" },
+    "introduction": { "type": "text", "default": "Operating from our primary drawing rooms in Mumbai and Goa, we orchestrate residential commissions, private estates, and hospitality retreats across India." },
+    "ctaText": { "type": "string", "default": "Inquire Regarding Studio Presence" },
+    "ctaLink": { "type": "string", "default": "/contact" },
+    "bannerImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "seoTitle": { "type": "string", "default": "Studio Presence & Atelier Locations | Inovador Design Studio" },
+    "seoDescription": { "type": "text", "default": "Explore our geographic presence across India." },
+    "seoImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

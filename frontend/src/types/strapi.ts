@@ -183,6 +183,7 @@ export interface StrapiStudioAboutItem {
   heroHeadline?: string;
   heroSubheadline?: string;
   heroSubtitle?: string;
+  bannerImage?: StrapiMedia | string;
   manifesto?: string;
   history?: string;
   ethosEyebrow?: string;
@@ -334,6 +335,20 @@ export interface StrapiProjectsPageItem {
   seoDescription?: string;
   seoImage?: StrapiMedia | string;
   attributes?: Omit<StrapiProjectsPageItem, 'attributes'>;
+}
+
+export interface StrapiPresencePageItem {
+  id?: number | string;
+  documentId?: string;
+  heading?: string;
+  introduction?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  bannerImage?: StrapiMedia | string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoImage?: StrapiMedia | string;
+  attributes?: Omit<StrapiPresencePageItem, 'attributes'>;
 }
 
 export interface StrapiContactPageItem {

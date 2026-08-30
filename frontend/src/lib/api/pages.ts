@@ -2,6 +2,7 @@ import {
   HomePageData,
   ServicesPageData,
   ProjectsPageData,
+  PresencePageData,
   ContactPageData,
   Page,
 } from '@/types';
@@ -9,6 +10,7 @@ import {
   StrapiHomePageItem,
   StrapiServicesPageItem,
   StrapiProjectsPageItem,
+  StrapiPresencePageItem,
   StrapiContactPageItem,
   StrapiPageItem,
 } from '@/types/strapi';
@@ -17,6 +19,7 @@ import {
   normalizeHomePage,
   normalizeServicesPage,
   normalizeProjectsPage,
+  normalizePresencePage,
   normalizeContactPage,
   normalizePage,
 } from './normalizers';
@@ -84,6 +87,26 @@ export async function getProjectsPage(): Promise<ProjectsPageData> {
     ctaLink: '/contact',
     seoTitle: 'Architectural Portfolio & Selected Works | Inovador Design Studio',
     seoDescription: 'Explore our portfolio of private sanctuaries, luxury coastal villas, urban residences, and hospitality spaces across Mumbai, Goa, and Bengaluru.',
+  };
+}
+
+export async function getPresencePage(): Promise<PresencePageData> {
+  try {
+    const res = await fetchAPI<StrapiPresencePageItem>('/api/presence-page', {
+      params: { populate: '*' },
+      tags: ['presence-page'],
+    });
+    if (res && res.data) return normalizePresencePage(res.data);
+  } catch (e) {
+    console.error('Error fetching PresencePage configuration:', e);
+  }
+  return {
+    heading: 'Studio Presence & Regional Ateliers',
+    introduction: 'Operating from our primary drawing rooms in Mumbai and Goa, we orchestrate residential commissions, private estates, and hospitality retreats across India’s most distinctive topographies.',
+    ctaText: 'Inquire Regarding Studio Presence',
+    ctaLink: '/contact',
+    seoTitle: 'Studio Presence & Atelier Locations | Inovador Design Studio',
+    seoDescription: 'Explore our geographic presence and regional architectural practices across Mumbai, Goa, Bengaluru, New Delhi, and Alibaug.',
   };
 }
 

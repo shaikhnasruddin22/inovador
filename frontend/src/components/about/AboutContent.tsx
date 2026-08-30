@@ -81,24 +81,37 @@ export function AboutContent({ aboutData }: AboutContentProps) {
       ? aboutData.leadership
       : DEFAULT_LEADERSHIP;
 
+  const bannerImage =
+    aboutData?.bannerImage ||
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2400&q=85';
+
   return (
     <div className="bg-[var(--bg-primary)]">
-      {/* Hero Section */}
-      <section className="pt-16 pb-20 bg-[var(--bg-secondary)] border-b border-[var(--border-light)] overflow-hidden">
-        <Container>
+      {/* Cinematic Hero Banner */}
+      <section className="relative min-h-[55vh] md:min-h-[65vh] flex items-end overflow-hidden border-b border-[var(--border-subtle)] bg-[#111111]">
+        <Image
+          src={bannerImage}
+          alt={heroHeadline}
+          fill
+          priority
+          className="object-cover opacity-50 filter grayscale contrast-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/60 to-transparent" />
+
+        <Container className="relative z-10 py-16 md:py-20">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: EASE_EDITORIAL }}
             className="max-w-4xl"
           >
-            <span className="text-xs uppercase tracking-[0.2em] text-[var(--accent-terracotta)] font-sans font-medium mb-4 block">
-              About Inovador Design Studio
+            <span className="text-xs uppercase tracking-[0.28em] text-[var(--accent-terracotta)] font-sans font-semibold mb-4 block">
+              About Inovador Design Studio · Founded 2018
             </span>
-            <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-light leading-tight tracking-tight text-[var(--text-primary)] mb-6">
+            <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-light leading-[1.08] tracking-tight text-white mb-6">
               {heroHeadline}
             </h1>
-            <p className="text-lg sm:text-xl text-[var(--text-secondary)] font-light leading-relaxed font-sans max-w-3xl">
+            <p className="text-lg md:text-2xl text-[#c7c2b8] font-light leading-relaxed font-sans max-w-3xl">
               {heroSubtitle}
             </p>
           </motion.div>

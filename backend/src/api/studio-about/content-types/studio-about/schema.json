@@ -62,6 +62,12 @@
     "heroSubtitle": {
       "type": "text"
     },
+    "bannerImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
     "ethosEyebrow": {
       "type": "string"
     },

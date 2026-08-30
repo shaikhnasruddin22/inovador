@@ -4,47 +4,75 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight, MapPin, Phone } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
-import { getPresence, getStudioAbout } from '@/lib/api';
+import { PresenceLocation } from '@/types';
+import { getPresence, getStudioAbout, getPresencePage } from '@/lib/api';
 import { InquirySection } from '@/components/contact/InquirySection';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export const metadata: Metadata = {
-  title: 'Studio Presence & Locations | Inovador Design Studio',
-  description: 'Our architectural studios and presence across Mumbai, Goa, Bengaluru, New Delhi, and Alibaug.',
-  openGraph: {
-    title: 'Studio Presence & Locations | Inovador Design Studio',
-    description: 'Explore our geographic presence and regional architectural practices across India.',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const pageConfig = await getPresencePage().catch(() => null);
+  if (!pageConfig) return { title: 'Studio Presence & Locations | Inovador Design Studio' };
+
+  return {
+    title: pageConfig.seoTitle || 'Studio Presence & Locations | Inovador Design Studio',
+    description: pageConfig.seoDescription,
+    openGraph: {
+      title: pageConfig.seoTitle,
+      description: pageConfig.seoDescription,
+      images: pageConfig.seoImage ? [{ url: pageConfig.seoImage }] : undefined,
+    },
+  };
+}
 
 export default async function PresenceDirectoryPage() {
-  const [locations, studioAbout] = await Promise.all([
+  const [locations, studioAbout, pageConfig] = await Promise.all([
     getPresence(),
     getStudioAbout(),
+    getPresencePage(),
   ]);
 
+  const bannerImage =
+    pageConfig.bannerImage ||
+    pageConfig.seoImage ||
+    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=2400&q=85';
+
   return (
-    <div className="py-16 md:py-24 bg-[var(--bg-primary)]">
-      <Container className="mb-16">
-        <div className="max-w-3xl">
-          <span className="text-xs uppercase tracking-[0.24em] font-sans font-semibold text-[var(--accent-terracotta)] mb-4 block">
-            Geographic Footprint
-          </span>
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-light text-[var(--text-primary)] mb-6 tracking-tight">
-            Studio Presence & Regional Ateliers
-          </h1>
-          <p className="text-lg md:text-xl text-[var(--text-secondary)] font-sans font-light leading-relaxed">
-            Operating from our primary drawing rooms in Mumbai and Goa, we orchestrate residential commissions, private estates, and hospitality retreats across India’s most distinctive topographies.
-          </p>
-        </div>
-      </Container>
+    <div className="bg-[var(--bg-primary)]">
+      {/* Cinematic Hero Banner */}
+      <div className="relative min-h-[55vh] md:min-h-[65vh] flex items-end overflow-hidden border-b border-[var(--border-subtle)] bg-[#111111]">
+        <Image
+          src={bannerImage}
+          alt={pageConfig.heading || 'Studio Presence'}
+          fill
+          priority
+          className="object-cover opacity-50 filter grayscale contrast-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/60 to-transparent" />
+
+        <Container className="relative z-10 py-16 md:py-20">
+          <div className="max-w-4xl">
+            <span className="text-xs uppercase tracking-[0.28em] font-sans font-semibold text-[var(--accent-terracotta)] mb-4 block">
+              Geographic Footprint · Prime Terrains
+            </span>
+            <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-light text-white mb-6 tracking-tight leading-[1.08]">
+              {pageConfig.heading || 'Studio Presence & Regional Ateliers'}
+            </h1>
+            <p className="text-lg md:text-2xl text-[#c7c2b8] font-sans font-light leading-relaxed max-w-2xl">
+              {pageConfig.introduction}
+            </p>
+          </div>
+        </Container>
+      </div>
+
+      {/* Locations Grid */}
+      <div className="py-16 md:py-24">
 
       {/* Locations Grid */}
       <Container className="mb-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {locations.map((loc) => (
+          {locations.map((loc: PresenceLocation) => (
             <Link
               key={loc.id}
               href={`/presence/${loc.slug}`}
@@ -97,6 +125,7 @@ export default async function PresenceDirectoryPage() {
 
       {/* Inquiry Section */}
       <InquirySection aboutData={studioAbout} />
+      </div>
     </div>
   );
 }
