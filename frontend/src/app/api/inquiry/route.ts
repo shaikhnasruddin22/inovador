@@ -122,7 +122,11 @@ export async function POST(req: NextRequest) {
       Accept: 'application/json',
     };
 
-    if (STRAPI_WRITE_TOKEN && !STRAPI_WRITE_TOKEN.includes('PLACEHOLDER')) {
+    if (
+      STRAPI_WRITE_TOKEN &&
+      !STRAPI_WRITE_TOKEN.toLowerCase().includes('placeholder') &&
+      !STRAPI_WRITE_TOKEN.toLowerCase().includes('your_strapi')
+    ) {
       strapiHeaders['Authorization'] = `Bearer ${STRAPI_WRITE_TOKEN}`;
     }
 
@@ -138,23 +142,25 @@ export async function POST(req: NextRequest) {
       },
     };
 
-    const strapiRes = await fetch(`${STRAPI_API_URL}/api/inquiries`, {
-      method: 'POST',
-      headers: strapiHeaders,
-      body: JSON.stringify(strapiPayload),
-    });
+    let inquiryId = 'NEW';
 
-    if (!strapiRes.ok) {
-      const strapiError = await strapiRes.text().catch(() => '');
-      console.error(`[Strapi Inquiry Creation Failed ${strapiRes.status}]:`, strapiError);
-      return NextResponse.json(
-        { error: 'An issue occurred while saving your inquiry. Please try again or reach out directly.' },
-        { status: 500 }
-      );
+    try {
+      const strapiRes = await fetch(`${STRAPI_API_URL}/api/inquiries`, {
+        method: 'POST',
+        headers: strapiHeaders,
+        body: JSON.stringify(strapiPayload),
+      });
+
+      if (strapiRes.ok) {
+        const strapiData = await strapiRes.json().catch(() => ({}));
+        inquiryId = String(strapiData?.data?.id || strapiData?.data?.documentId || 'NEW');
+      } else {
+        const strapiError = await strapiRes.text().catch(() => '');
+        console.warn(`[Strapi Inquiry Warning ${strapiRes.status}]:`, strapiError);
+      }
+    } catch (strapiErr) {
+      console.error('[Strapi Connection Error]:', strapiErr);
     }
-
-    const strapiData = await strapiRes.json().catch(() => ({}));
-    const inquiryId = strapiData?.data?.id || strapiData?.data?.documentId || 'NEW';
 
     // 5. Send Emails via Resend
     if (RESEND_API_KEY && !RESEND_API_KEY.includes('PLACEHOLDER')) {
