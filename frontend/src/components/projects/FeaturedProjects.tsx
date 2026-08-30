@@ -19,10 +19,12 @@ export function FeaturedProjects({ initialProjects }: FeaturedProjectsProps) {
 
   const filteredProjects = useMemo(() => {
     return initialProjects.filter((project) => {
+      const projCat = (project.category || 'Architecture').toString();
+      const projCity = (project.city || 'Mumbai').toString();
       const matchCategory =
-        selectedCategory === 'All' || project.category.toLowerCase() === selectedCategory.toLowerCase();
+        selectedCategory === 'All' || projCat.toLowerCase() === selectedCategory.toLowerCase();
       const matchCity =
-        selectedCity === 'All' || project.city.toLowerCase() === selectedCity.toLowerCase();
+        selectedCity === 'All' || projCity.toLowerCase() === selectedCity.toLowerCase();
       return matchCategory && matchCity;
     });
   }, [initialProjects, selectedCategory, selectedCity]);

@@ -30,7 +30,8 @@ export function getMediaUrl(media?: StrapiMedia | string | null): string | undef
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url;
   }
-  return `${STRAPI_API_URL}${url}`;
+  const publicBase = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://cms.inovadordesignstudio.com';
+  return `${publicBase.replace(/\/$/, '')}${url.startsWith('/') ? url : `/${url}`}`;
 }
 
 export function getMediaGalleryUrls(
