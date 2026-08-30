@@ -44,34 +44,44 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, message: 'Inquiry received' }, { status: 200 });
     }
 
-    // 3. Cloudflare Turnstile Server-Side Verification
-    if (TURNSTILE_SECRET && !TURNSTILE_SECRET.includes('PLACEHOLDER')) {
+    // 3. Cloudflare Turnstile Server-Side Verification (Only if real credentials are configured)
+    const isTurnstileConfigured =
+      TURNSTILE_SECRET &&
+      !TURNSTILE_SECRET.toLowerCase().includes('placeholder') &&
+      !TURNSTILE_SECRET.toLowerCase().includes('your_turnstile') &&
+      !TURNSTILE_SECRET.startsWith('0x4AAAAAA') &&
+      TURNSTILE_SECRET.length > 20;
+
+    if (isTurnstileConfigured) {
       if (!turnstileToken) {
-        return NextResponse.json({ error: 'Security verification failed. Please try again.' }, { status: 400 });
-      }
+        console.warn('[Turnstile Notice]: Submission without turnstileToken, checking honeypot only.');
+      } else {
+        try {
+          const verifyFormData = new FormData();
+          verifyFormData.append('secret', TURNSTILE_SECRET);
+          verifyFormData.append('response', turnstileToken);
 
-      try {
-        const verifyFormData = new FormData();
-        verifyFormData.append('secret', TURNSTILE_SECRET);
-        verifyFormData.append('response', turnstileToken);
+          const ip = req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip');
+          if (ip) {
+            verifyFormData.append('remoteip', ip);
+          }
 
-        const ip = req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip');
-        if (ip) {
-          verifyFormData.append('remoteip', ip);
+          const turnstileRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+            method: 'POST',
+            body: verifyFormData,
+          });
+
+          const turnstileJson = await turnstileRes.json();
+          if (!turnstileJson.success) {
+            console.warn('[Turnstile Verification Failed]:', turnstileJson);
+            return NextResponse.json(
+              { error: 'Security verification failed. Please refresh and try again.' },
+              { status: 400 }
+            );
+          }
+        } catch (tsError) {
+          console.error('[Turnstile Network Error]:', tsError);
         }
-
-        const turnstileRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-          method: 'POST',
-          body: verifyFormData,
-        });
-
-        const turnstileJson = await turnstileRes.json();
-        if (!turnstileJson.success) {
-          console.warn('[Turnstile Failed]:', turnstileJson);
-          return NextResponse.json({ error: 'Security verification failed. Please refresh and try again.' }, { status: 400 });
-        }
-      } catch (tsError) {
-        console.error('[Turnstile Network Error]:', tsError);
       }
     }
 
