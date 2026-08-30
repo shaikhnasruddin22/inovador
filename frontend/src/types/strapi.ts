@@ -315,6 +315,7 @@ export interface StrapiServicesPageItem {
   introduction?: string;
   ctaText?: string;
   ctaLink?: string;
+  bannerImage?: StrapiMedia | string;
   seoTitle?: string;
   seoDescription?: string;
   seoImage?: StrapiMedia | string;
@@ -328,6 +329,7 @@ export interface StrapiProjectsPageItem {
   introduction?: string;
   ctaText?: string;
   ctaLink?: string;
+  bannerImage?: StrapiMedia | string;
   seoTitle?: string;
   seoDescription?: string;
   seoImage?: StrapiMedia | string;
@@ -345,6 +347,7 @@ export interface StrapiContactPageItem {
   officeHours?: string;
   advisoryProtocol?: string;
   ctaText?: string;
+  bannerImage?: StrapiMedia | string;
   seoTitle?: string;
   seoDescription?: string;
   seoImage?: StrapiMedia | string;
